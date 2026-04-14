@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Attribute {
+  id          Int         @id @default(autoincrement())
+  description String
+  challenges  Challenge[]
+  entityAttributes EntityAttribute[]
+  playerAttributeScores PlayerAttributeScore[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Player {
+  id                 Int                      @id @default(autoincrement())
+  name               String?
+  playerCode         String                   @unique
+  completedChallenges PlayerChallenge[]
+  playerAttributeScores PlayerAttributeScore[]
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+}
+
+model PlayerAttributeScore {
+  id          Int       @id @default(autoincrement())
+  playerId    Int
+  attributeId Int
+  score       Int       @default(0)
+  player      Player    @relation(fields: [playerId], references: [id])
+  attribute   Attribute @relation(fields: [attributeId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([playerId, attributeId])
+}
+
+
+model Challenge {
+  id          Int                      @id @default(autoincrement())
+  description String
+  score       Int
+  custom      Boolean                  @default(false)
+  attributeId Int
+  attribute   Attribute                @relation(fields: [attributeId], references: [id])
+  completedBy PlayerChallenge[]
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @updatedAt
+}
+
+enum ChallengeStatus {
+  OPEN
+  COMPLETED
+  ABANDONED
+}
+
+model PlayerChallenge {
+  id          Int             @id @default(autoincrement())
+  playerId    Int
+  challengeId Int
+  status      ChallengeStatus @default(OPEN)
+  player      Player          @relation(fields: [playerId], references: [id])
+  challenge   Challenge       @relation(fields: [challengeId], references: [id])
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@unique([playerId, challengeId])
+}
+
+model Entity {
+  id          Int               @id @default(autoincrement())
+  name        String
+  imageUrl    String?
+  description String
+  attributes  EntityAttribute[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model EntityAttribute {
+  id          Int       @id @default(autoincrement())
+  entityId    Int
+  attributeId Int
+  entity      Entity    @relation(fields: [entityId], references: [id])
+  attribute   Attribute @relation(fields: [attributeId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([entityId, attributeId])
+}
