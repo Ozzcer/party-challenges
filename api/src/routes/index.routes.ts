@@ -1,7 +1,6 @@
 import { FastifyInstance } from 'fastify';
+import { authRoutes } from './auth.routes';
 
 export async function routes(fastify: FastifyInstance) {
-  fastify.get('/', async function handler (request, reply) {
-    return { hello: 'worlsd' }
-  })
+  fastify.register(authRoutes);
 }
