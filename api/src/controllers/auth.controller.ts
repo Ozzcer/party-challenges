@@ -17,7 +17,7 @@ export async function adminLoginHandler(
     return reply.status(401).send({ error: 'Invalid credentials' });
   }
 
-  const token = request.server.jwt.sign({ id: admin.id, role: 'admin' });
+  const token = request.server.jwt.sign({ id: admin.id, role: 'admin' }, { expiresIn: '8h' });
   reply.setCookie('token', token, { httpOnly: true, path: '/', sameSite: 'strict' });
   reply.status(204).send();
 }

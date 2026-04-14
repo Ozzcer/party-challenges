@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { apiPost } from '$lib/api';
+  import { adminPost } from '$lib/api';
 
   let error = $state<string | null>(null);
 
@@ -10,7 +10,7 @@
     error = null;
 
     try {
-      await apiPost('/admin/login', {
+      await adminPost('/login', {
         username: data.get('username'),
         password: data.get('password'),
       });
