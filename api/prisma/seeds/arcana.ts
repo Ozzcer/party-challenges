@@ -45,6 +45,22 @@ async function main() {
       password: await hash(process.env.ADMIN_SEED_PASSWORD!),
     },
   });
+
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const usedCodes = new Set<string>();
+
+  function generatePlayerCode(): string {
+    let code: string;
+    do {
+      code = Array.from({ length: 5 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    } while (usedCodes.has(code));
+    usedCodes.add(code);
+    return code;
+  }
+
+  for (let i = 0; i < 100; i++) {
+    await prisma.player.create({ data: { playerCode: generatePlayerCode() } });
+  }
 }
 main()
   .then(async () => {
