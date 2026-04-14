@@ -1,0 +1,21 @@
+{
+  "name": "party-challenges",
+  "version": "0.0.1",
+  "description": "Generic system for tracking points earned on challenges, intended for an in-face party style environment",
+  "homepage": "https://github.com/Ozzcer/party-challenges#readme",
+  "bugs": {
+    "url": "https://github.com/Ozzcer/party-challenges/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ozzcer/party-challenges.git"
+  },
+  "license": "AGPL-3.0-only",
+  "author": "Ozzcer",
+  "type": "module",
+  "private": true,
+  "workspaces": ["api", "fe"],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
