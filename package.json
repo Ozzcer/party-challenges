@@ -14,8 +14,15 @@
   "author": "Ozzcer",
   "type": "module",
   "private": true,
-  "workspaces": ["api", "fe"],
+  "workspaces": [
+    "api",
+    "fe"
+  ],
   "scripts": {
+    "dev": "concurrently \"npm run dev -w api\" \"npm run dev -w fe\"",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
