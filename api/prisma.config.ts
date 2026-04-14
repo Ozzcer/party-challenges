@@ -5,9 +5,9 @@ export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
+    seed: "tsx prisma/seeds/arcana.ts",
   },
   datasource: {
-    // @ts-expect-error - prisma excluded from build
     url: process.env.DATABASE_URL,
   },
 });

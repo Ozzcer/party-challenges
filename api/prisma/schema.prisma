@@ -17,19 +17,22 @@ model Admin {
 
 model Attribute {
   id          Int         @id @default(autoincrement())
+  name        String
   description String
   challenges  Challenge[]
   entityAttributes EntityAttribute[]
   playerAttributeScores PlayerAttributeScore[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+
+  @@unique([name])
 }
 
 model Player {
   id                 Int                      @id @default(autoincrement())
   name               String?
   playerCode         String                   @unique
-  completedChallenges PlayerChallenge[]
+  challengeParticipation ChallengeParticipant[]
   playerAttributeScores PlayerAttributeScore[]
   createdAt          DateTime                 @default(now())
   updatedAt          DateTime                 @updatedAt
@@ -50,34 +53,49 @@ model PlayerAttributeScore {
 
 
 model Challenge {
-  id          Int                      @id @default(autoincrement())
+  id          Int                 @id @default(autoincrement())
   description String
   score       Int
-  custom      Boolean                  @default(false)
+  type        ChallengeType       @default(SOLO)
+  custom      Boolean             @default(false)
   attributeId Int
-  attribute   Attribute                @relation(fields: [attributeId], references: [id])
-  completedBy PlayerChallenge[]
-  createdAt   DateTime                 @default(now())
-  updatedAt   DateTime                 @updatedAt
+  attribute   Attribute           @relation(fields: [attributeId], references: [id])
+  instances   ChallengeInstance[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+enum ChallengeType {
+  SOLO
+  ADVERSARIAL
 }
 
 enum ChallengeStatus {
   OPEN
   COMPLETED
-  ABANDONED
+  FAILED
 }
 
-model PlayerChallenge {
-  id          Int             @id @default(autoincrement())
-  playerId    Int
-  challengeId Int
-  status      ChallengeStatus @default(OPEN)
-  player      Player          @relation(fields: [playerId], references: [id])
-  challenge   Challenge       @relation(fields: [challengeId], references: [id])
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+model ChallengeInstance {
+  id           Int               @id @default(autoincrement())
+  challengeId  Int
+  challenge    Challenge         @relation(fields: [challengeId], references: [id])
+  participants ChallengeParticipant[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
 
-  @@unique([playerId, challengeId])
+model ChallengeParticipant {
+  id         Int               @id @default(autoincrement())
+  playerId   Int
+  instanceId Int
+  status     ChallengeStatus   @default(OPEN)
+  player     Player            @relation(fields: [playerId], references: [id])
+  instance   ChallengeInstance @relation(fields: [instanceId], references: [id])
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  @@unique([playerId, instanceId])
 }
 
 model Entity {
