@@ -22,6 +22,14 @@ export async function adminLoginHandler(
   reply.status(204).send();
 }
 
+export async function logoutHandler(
+  _request: FastifyRequest,
+  reply: FastifyReply
+): Promise<void> {
+  reply.clearCookie('token', { path: '/' });
+  reply.status(204).send();
+}
+
 export async function playerLoginHandler(
   request: FastifyRequest<{
     Body: FromSchema<typeof playerLoginSchema>
