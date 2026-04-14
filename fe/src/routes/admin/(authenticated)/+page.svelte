@@ -1,16 +1,8 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { adminGet, ApiError } from '$lib/api';
+  import type { PageData } from './$types';
 
-  let overview = $state<{ playerCount: number; challengeCount: number; challengeInstanceCount: number } | null>(null);
-
-  onMount(async () => {
-    const result = await adminGet<typeof overview>('/overview');
-    if (!(result instanceof ApiError)) {
-      overview = result;
-    }
-  });
+  let { data }: { data: PageData } = $props();
 </script>
 
 <h1>Admin landing</h1>
-<pre>{JSON.stringify(overview, null, 2)}</pre>
+<pre>{JSON.stringify(data.overview, null, 2)}</pre>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { publicPost, ApiError } from '$lib/api';
+  import { publicPatch } from '$lib/api';
 
   let error = $state<string | null>(null);
 
@@ -10,21 +10,18 @@
     error = null;
 
     try {
-      const result = await publicPost<{ nameRequired: boolean }>('/login', {
-        playerCode: data.get('playerCode'),
-      });
-      if (result instanceof ApiError) throw result;
-      goto(result?.nameRequired ? '/set-name' : '/');
+      await publicPatch('/me/name', { name: data.get('name') });
+      goto('/');
     } catch (err) {
       error = (err as Error).message;
     }
   }
 </script>
 
-<h1>Player login</h1>
+<h1>Set your name</h1>
 <form onsubmit={submit}>
-  <input name="playerCode" type="text" placeholder="Enter your code" />
-  <button>Login</button>
+  <input name="name" type="text" placeholder="Enter your name" />
+  <button>Continue</button>
   {#if error}
     <span>{error}</span>
   {/if}

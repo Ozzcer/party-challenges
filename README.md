@@ -36,14 +36,14 @@ npm run dev
 - [ ] **Admin: create challenges** — Admins can create challenges tied to an attribute, with a description, score value, and type (solo/adversarial)
 - [ ] **Admin: assign players to challenges** — Admins can create challenge instances within an event and assign one or more players to them
 - [ ] **Admin: resolve challenges** — Admins mark a challenge instance as complete or failed; for adversarial challenges a winner is selected. Score is applied to the relevant player attribute on completion
-- [ ] **Player login** — Players enter their unique code, then set their name on first login
-  - [ ] API: player auth guard — `player.auth.guard.ts`, validates JWT role is `player`, mirrors admin guard
-  - [ ] API: player routes — `player.routes.ts`, scoped group with player auth guard as preHandler, registered under `/player` prefix
-  - [ ] API: `PATCH /player/me/name` — sets name on the authenticated player, returns 400 if name already set
-  - [ ] API: `player.service.ts` — setPlayerName(playerId, name)
-  - [ ] FE: `/login` page — player code entry form, calls `POST /login`, stores nameRequired from response
-  - [ ] FE: `/set-name` page — shown after login if nameRequired, calls `PATCH /player/me/name`, redirects to player landing on success
-  - [ ] FE: redirect to `/set-name` after login if nameRequired, else redirect to player landing
+- [x] **Player login** — Players enter their unique code, then set their name on first login
+  - [x] API: player auth guard — `player.auth.guard.ts`, validates JWT role is `player`, mirrors admin guard
+  - [x] API: player routes — `player.routes.ts`, scoped group with player auth guard as preHandler, registered under `/public` prefix
+  - [x] API: `PATCH /public/me/name` — sets name on the authenticated player, returns 400 if name already set
+  - [x] API: `player.service.ts` — setPlayerName(playerId, name)
+  - [x] FE: `/login` page — player code entry form, calls `POST /public/login`, stores nameRequired from response
+  - [x] FE: `/set-name` page — shown after login if nameRequired, calls `PATCH /public/me/name`, redirects to player landing on success
+  - [x] FE: redirect to `/set-name` after login if nameRequired, else redirect to player landing
 - [ ] **Leaderboards** — Per-attribute leaderboard ranked by score, plus an overall leaderboard based on average score across all attributes
 - [ ] **Player landing: entity** — Players can view their linked entity (character/avatar), determined by their attribute scores
 - [ ] **Player landing: attributes** — Players can view their current attribute scores
