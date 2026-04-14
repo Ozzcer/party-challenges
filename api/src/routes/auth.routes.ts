@@ -3,5 +3,5 @@ import { adminLoginHandler, playerLoginHandler } from '../controllers/auth.contr
 
 export async function authRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post('/admin/login', adminLoginHandler);
-  fastify.post('/login', playerLoginHandler);
+  fastify.post('/public/login', playerLoginHandler);
 }
