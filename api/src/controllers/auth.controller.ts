@@ -3,6 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 import { adminLoginSchema } from '../schema/admin-login.schema';
 import { playerLoginSchema } from '../schema/player-login.schema';
 import { adminLogin, playerLogin } from '../services/auth.service';
+import { enrollPlayerInCurrentEvent } from '../services/event.service';
 
 export async function adminLoginHandler(
   request: FastifyRequest<{
@@ -41,6 +42,10 @@ export async function playerLoginHandler(
   const player = await playerLogin(playerCode);
   if (!player) {
     return reply.status(401).send({ error: 'Invalid player code' });
+  }
+
+  if (!(await enrollPlayerInCurrentEvent(player.id))){
+    return reply.status(400).send({ error: 'No current event' });
   }
 
   const token = request.server.jwt.sign({ id: player.id, role: 'player' });

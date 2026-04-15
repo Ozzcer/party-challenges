@@ -1,15 +1,39 @@
+import { GameEvent } from '../generated/prisma/client';
 import { prisma } from '../lib/prisma';
+import { getCurrentEvent } from './event.service';
 
-export async function getOverview(): Promise<{ playerCount: number; challengeCount: number; challengeInstanceCount: number }> {
-  const [playerCount, challengeCount, challengeInstanceCount] = await Promise.all([
-    prisma.player.count({
-      where: {
-        name: {not: null} 
-      }
-    }),
+export async function getOverview(): Promise<AdminOverview> {
+  const [totalEventCount, totalPlayerCount, totalChallengeCount, currentEvent] = await Promise.all([
+    prisma.gameEvent.count(),
+    prisma.player.count(),
     prisma.challenge.count(),
-    prisma.challengeInstance.count(),
+    getCurrentEvent(),
   ]);
 
-  return { playerCount, challengeCount, challengeInstanceCount };
+  if (!currentEvent) {
+    return { totalEventCount, totalPlayerCount, totalChallengeCount };
+  }
+
+  const [currentEventPlayerCount, currentEventChallengeInstanceCount] = await Promise.all([
+    prisma.gameEventPlayer.count({ where: { eventId: currentEvent.id, player: { name: { not: null } } } }),
+    prisma.challengeInstance.count({ where: { eventId: currentEvent.id } }),
+  ]);
+
+  return {
+    totalEventCount,
+    totalPlayerCount,
+    totalChallengeCount,
+    currentEvent,
+    currentEventPlayerCount,
+    currentEventChallengeInstanceCount,
+  };
+}
+
+export interface AdminOverview {
+  totalEventCount: number;
+  totalPlayerCount: number;
+  totalChallengeCount: number;
+  currentEvent?: GameEvent;
+  currentEventPlayerCount?: number;
+  currentEventChallengeInstanceCount?: number;
 }

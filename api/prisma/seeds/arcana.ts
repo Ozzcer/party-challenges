@@ -59,7 +59,10 @@ async function main() {
   }
 
   for (let i = 0; i < 100; i++) {
-    await prisma.player.create({ data: { playerCode: generatePlayerCode() } });
+    const player = await prisma.player.create({ data: { playerCode: generatePlayerCode() } });
+    if (i === 0) {
+      console.log(`First player created: ${player.playerCode}`);
+    }
   }
 }
 main()

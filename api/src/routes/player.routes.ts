@@ -11,6 +11,15 @@ export async function playerRoutes(fastify: FastifyInstance): Promise<void> {
       const { id } = request.user as { id: number };
       const player = await prisma.player.findUnique({ where: { id } });
       if (!player) return reply.status(404).send({ error: 'Player not found' });
+
+      const currentEvent = await prisma.gameEvent.findFirst({ where: { current: true } });
+      if (!currentEvent) return reply.status(401).send({ error: 'No active event' });
+
+      const enrolled = await prisma.gameEventPlayer.findUnique({
+        where: { eventId_playerId: { eventId: currentEvent.id, playerId: id } },
+      });
+      if (!enrolled) return reply.status(401).send({ error: 'Not registered in current event' });
+
       reply.send(player);
     });
 

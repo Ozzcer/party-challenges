@@ -29,26 +29,53 @@ model Attribute {
 }
 
 model Player {
-  id                 Int                      @id @default(autoincrement())
-  name               String?
-  playerCode         String                   @unique
+  id                    Int                    @id @default(autoincrement())
+  name                  String?
+  playerCode            String                 @unique
   challengeParticipation ChallengeParticipant[]
   playerAttributeScores PlayerAttributeScore[]
-  createdAt          DateTime                 @default(now())
-  updatedAt          DateTime                 @updatedAt
+  events                GameEventPlayer[]
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+}
+
+model GameEvent {
+  id                    Int                    @id @default(autoincrement())
+  name                  String
+  description           String
+  current               Boolean                @default(false)
+  players               GameEventPlayer[]
+  challengeInstances    ChallengeInstance[]
+  playerAttributeScores PlayerAttributeScore[]
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+}
+
+model GameEventPlayer {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  playerId  Int
+  event     GameEvent    @relation(fields: [eventId], references: [id])
+  player    Player   @relation(fields: [playerId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([eventId, playerId])
 }
 
 model PlayerAttributeScore {
   id          Int       @id @default(autoincrement())
   playerId    Int
   attributeId Int
+  eventId     Int
   score       Int       @default(0)
   player      Player    @relation(fields: [playerId], references: [id])
   attribute   Attribute @relation(fields: [attributeId], references: [id])
+  event       GameEvent     @relation(fields: [eventId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  @@unique([playerId, attributeId])
+  @@unique([playerId, attributeId, eventId])
 }
 
 
@@ -77,12 +104,14 @@ enum ChallengeStatus {
 }
 
 model ChallengeInstance {
-  id           Int               @id @default(autoincrement())
+  id           Int                    @id @default(autoincrement())
   challengeId  Int
-  challenge    Challenge         @relation(fields: [challengeId], references: [id])
+  eventId      Int
+  challenge    Challenge              @relation(fields: [challengeId], references: [id])
+  event        GameEvent                  @relation(fields: [eventId], references: [id])
   participants ChallengeParticipant[]
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
 }
 
 model ChallengeParticipant {
