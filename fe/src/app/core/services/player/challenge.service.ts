@@ -1,5 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { ApiService } from '../api.service';
+import { ProtectedChallengeInstance } from '@party/shared';
+import { Observable } from 'rxjs';
+import { ApiResult, ApiService } from '../api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -7,6 +9,7 @@ import { ApiService } from '../api.service';
 export class PlayerChallengeService {
   private readonly apiService = inject(ApiService);
 
-  public getChallenges() {
+  public getChallenges(): Observable<ApiResult<ProtectedChallengeInstance[]>> {
+    return this.apiService.get<ProtectedChallengeInstance[]>('player/challenges');
   }
 }

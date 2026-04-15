@@ -42,6 +42,7 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
       id: player.id,
       name: player.name,
       role: 'player',
+      playerCode: player.playerCode,
     });
     reply.setCookie('token', token, { httpOnly: true, path: '/', sameSite: 'strict' });
     reply.status(200).send({ nameRequired: player.name === null });
