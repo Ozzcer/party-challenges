@@ -24,7 +24,7 @@ export async function getEvent(id: number) {
     where: { id },
     include: {
       players: { include: { player: true } },
-      challengeInstances: { include: { participants: true, challenge: true } },
+      challengeInstances: { include: { participants: { include: { player: true } }, challenge: true } },
     },
   });
 }

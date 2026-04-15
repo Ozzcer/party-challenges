@@ -14,7 +14,7 @@ export type EventDetail = {
   challengeInstances: Array<{
     id: number;
     challenge: { id: number; description: string; type: string };
-    participants: Array<{ id: number; playerId: number; status: string }>;
+    participants: Array<{ id: number; playerId: number; status: string; player: { name: string | null; playerCode: string } }>;
   }>;
 };
 

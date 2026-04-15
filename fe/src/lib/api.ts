@@ -15,7 +15,7 @@ export class ApiError extends Error {
     this.name = 'ApiError'
   }
 }
-async function api<T>(type: ApiType, method: HttpMethod, path: string, body?: unknown): Promise<T | ApiError | null> {
+async function api<T>(type: ApiType, method: HttpMethod, path: string, body?: unknown): Promise<T | null> {
   const response = await fetch(`/api${path}`, {
     method,
     headers: body !== undefined ? { 'Content-Type': 'application/json' } : undefined,

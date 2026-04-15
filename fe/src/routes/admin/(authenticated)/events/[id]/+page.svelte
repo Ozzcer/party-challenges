@@ -8,18 +8,18 @@
   let name = $state(untrack(() => data.event.name));
   let description = $state(untrack(() => data.event.description));
   let current = $state(untrack(() => data.event.current));
-  let resultMessage = $state<string | null>(null);
+  let editMessage = $state<string | null>(null);
   let saving = $state(false);
 
   async function save(e: SubmitEvent) {
     e.preventDefault();
-    resultMessage = null;
+    editMessage = null;
     saving = true;
     try {
       await adminPatch(`/events/${data.event.id}`, { name, description, current });
-      resultMessage = "Saved";
+      editMessage = 'Saved';
     } catch (err) {
-      resultMessage = err instanceof ApiError ? err.message : 'Something went wrong';
+      editMessage = err instanceof ApiError ? err.message : 'Something went wrong';
     } finally {
       saving = false;
     }
@@ -45,8 +45,8 @@
       Current event
     </label>
     <button type="submit" disabled={saving}>Save</button>
-    {#if resultMessage}
-      <span>{resultMessage}</span>
+    {#if editMessage}
+      <span>{editMessage}</span>
     {/if}
   </form>
 </section>
@@ -84,7 +84,7 @@
             <td>{instance.challenge.type}</td>
             <td>
               {#each instance.participants as p}
-                <span>{p.playerId} ({p.status})</span>
+                <span>{p.player.name ?? p.player.playerCode} ({p.status})</span>
               {/each}
             </td>
           </tr>
@@ -92,4 +92,5 @@
       </tbody>
     </table>
   {/if}
+  <a href="/admin/events/{data.event.id}/assign">Assign challenge</a>
 </section>
