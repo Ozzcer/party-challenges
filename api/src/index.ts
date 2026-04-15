@@ -1,6 +1,7 @@
-import Fastify from 'fastify';
 import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
+import Fastify from 'fastify';
+import { errorHandler } from './lib/error-handler.lib';
 import { routes } from './routes/index.routes';
 
 const fastify = Fastify({
@@ -16,6 +17,7 @@ await fastify.register(fastifyJwt, {
   },
 });
 
+fastify.setErrorHandler(errorHandler);
 await fastify.register(routes);
 
 try {

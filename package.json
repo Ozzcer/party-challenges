@@ -19,7 +19,7 @@
     "fe"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev -w api\" \"npm run dev -w fe\"",
+    "start": "concurrently \"npm run dev -w api\" \"npm run start -w fe\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {

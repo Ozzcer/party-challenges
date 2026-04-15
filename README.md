@@ -12,7 +12,7 @@ A party game platform where players join via a code, compete in solo and adversa
 Run from project root
 ```bash
 npm install
-npm run dev
+npm start
 ```
 
 ## Docs
