@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-export async function playerAuthGuard(request: FastifyRequest, reply: FastifyReply): Promise<void> {
+export async function apiAuthGuard(request: FastifyRequest, reply: FastifyReply): Promise<void> {
   try {
     await request.jwtVerify();
   } catch {
@@ -8,7 +8,7 @@ export async function playerAuthGuard(request: FastifyRequest, reply: FastifyRep
   }
 
   const payload = request.user as { role?: string };
-  if (payload.role !== 'player') {
+  if (payload.role !== 'admin') {
     return reply.status(403).send({ error: 'Forbidden' });
   }
 }

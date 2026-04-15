@@ -3,7 +3,6 @@ import { FromSchema } from 'json-schema-to-ts';
 import { adminLoginSchema } from '../schema/admin-login.schema';
 import { playerLoginSchema } from '../schema/player-login.schema';
 import { adminLogin, playerLogin } from '../services/auth.service';
-import { enrollPlayerInCurrentEvent } from '../services/event.service';
 
 export async function authRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post('/admin/login', async (
@@ -25,7 +24,7 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post('/public/login', async (
     request: FastifyRequest<{ Body: FromSchema<typeof playerLoginSchema> }>,
     reply: FastifyReply
-  ) => {
+  ): Promise<void> => {
     const { playerCode } = request.body;
 
     const player = await playerLogin(playerCode);
@@ -33,16 +32,14 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
       return reply.status(401).send({ error: 'Invalid player code' });
     }
 
-    if (!(await enrollPlayerInCurrentEvent(player.id))) {
-      return reply.status(400).send({ error: 'No current event' });
-    }
+    // TODO enroll in current event
 
     const token = request.server.jwt.sign({ id: player.id, role: 'player' });
     reply.setCookie('token', token, { httpOnly: true, path: '/', sameSite: 'strict' });
     reply.status(200).send({ nameRequired: player.name === null });
   });
 
-  fastify.post('/logout', async (_request: FastifyRequest, reply: FastifyReply) => {
+  fastify.post('/logout', async (_request: FastifyRequest, reply: FastifyReply): Promise<void> => {
     reply.clearCookie('token', { path: '/' });
     reply.status(204).send();
   });

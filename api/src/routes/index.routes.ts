@@ -1,10 +1,10 @@
 import { FastifyInstance } from 'fastify';
-import { authRoutes } from './auth.routes';
 import { adminRoutes } from './admin.routes';
-import { playerRoutes } from './player.routes';
+import { authRoutes } from './auth.routes';
+import { publicRoutes } from './public.routes';
 
-export async function routes(fastify: FastifyInstance) {
+export async function routes(fastify: FastifyInstance): Promise<void> {
   fastify.register(authRoutes);
   fastify.register(adminRoutes, { prefix: '/admin' });
-  fastify.register(playerRoutes, { prefix: '/public' });
+  fastify.register(publicRoutes, { prefix: '/public' });
 }
