@@ -1,0 +1,10 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label>
+    Name
+    <input formControlName="name" type="text" placeholder="Your name" />
+  </label>
+  <button type="submit" [disabled]="form.invalid">Set Name</button>
+  @if (error()) {
+    <p>{{ error() }}</p>
+  }
+</form>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 
@@ -8,10 +8,8 @@ import { AuthService } from '../core/services/auth.service';
   templateUrl: './admin-layout.component.html',
 })
 export class AdminLayoutComponent {
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   logout(): void {
     this.authService.logout().subscribe(() => {

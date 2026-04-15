@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
@@ -9,17 +9,15 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './admin-login.component.html',
 })
 export class AdminLogin {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   form = new FormGroup({
     username: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
   });
 
   result = signal('');
-
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
 
   login(): void {
     if (this.form.invalid) return;

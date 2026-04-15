@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../../shared/models/user.model';
 import { ApiResult, ApiService } from './api.service';
@@ -7,16 +7,19 @@ import { ApiResult, ApiService } from './api.service';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(
-    private apiService: ApiService,
-  ) {}
+  private readonly apiService = inject(ApiService);
 
   public adminLogin(username: string, password: string): Observable<ApiResult<null>> {
-    return this.apiService
-      .post<null>('/admin/login', {
-        username,
-        password,
-      });
+    return this.apiService.post<null>('/admin/login', {
+      username,
+      password,
+    });
+  }
+
+  public publicLogin(playerCode: string): Observable<ApiResult<null>> {
+    return this.apiService.post<null>('/public/login', {
+      playerCode,
+    });
   }
 
   public getUser(): Observable<ApiResult<User>> {
@@ -27,4 +30,3 @@ export class AuthService {
     return this.apiService.get<null>('/auth/logout');
   }
 }
-

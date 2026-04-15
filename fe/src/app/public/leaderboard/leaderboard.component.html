@@ -1,0 +1,18 @@
+@let result = leaderboards();
+@if (result === undefined) {
+  <app-loading />
+} @else if (result.success) {
+  @for (lb of result.result; track lb.attribute.id) {
+    <section>
+      <h2>{{ lb.attribute.name }}</h2>
+      <ol>
+        @for (player of lb.players; track player.id) {
+          <li>{{ player.name }}</li>
+        }
+      </ol>
+      <p>Your position: {{ lb.currentPlayerPosition }}</p>
+    </section>
+  }
+} @else {
+  <p>{{ result.error.message }}</p>
+}

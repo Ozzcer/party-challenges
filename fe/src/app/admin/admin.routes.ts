@@ -1,14 +1,21 @@
 import { Routes } from '@angular/router';
 import { adminAuthGuard } from '../core/guards/admin-auth.guard';
+import { adminNoAuthGuard } from '../core/guards/admin-no-auth.guard';
 import { AdminLayoutComponent } from './admin-layout.component';
+import { AdminLogin } from './admin-login/admin-login.component';
+import { AssignChallengeComponent } from './challenges/assign-challenge/assign-challenge.component';
+import { ChallengeListComponent } from './challenges/challenge-list/challenge-list.component';
+import { ResolveChallengeComponent } from './challenges/resolve-challenge/resolve-challenge.component';
 import { LandingComponent } from './landing/landing.component';
-import { PlayersComponent } from './players/players.component';
+import { PlayerListComponent } from './players/player-list/player-list.component';
 import { PlayerComponent } from './players/player/player.component';
-import { ChallengesComponent } from './challenges/challenges.component';
-import { AssignComponent } from './challenges/assign/assign.component';
-import { ResolveComponent } from './challenges/resolve/resolve.component';
 
 export const ADMIN_ROUTES: Routes = [
+  {
+    path: 'login',
+    component: AdminLogin,
+    canActivate: [adminNoAuthGuard],
+  },
   {
     path: '',
     component: AdminLayoutComponent,
@@ -21,19 +28,19 @@ export const ADMIN_ROUTES: Routes = [
           {
             path: 'players',
             children: [
-              { path: '', component: PlayersComponent },
+              { path: '', component: PlayerListComponent },
               { path: ':id', component: PlayerComponent },
             ],
           },
           {
             path: 'challenges',
             children: [
-              { path: '', component: ChallengesComponent },
+              { path: '', component: ChallengeListComponent },
               {
                 path: ':id',
                 children: [
-                  { path: 'assign', component: AssignComponent },
-                  { path: 'resolve', component: ResolveComponent },
+                  { path: 'assign', component: AssignChallengeComponent },
+                  { path: 'resolve', component: ResolveChallengeComponent },
                 ],
               },
             ],
