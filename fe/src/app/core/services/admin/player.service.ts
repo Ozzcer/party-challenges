@@ -1,17 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Player } from '../../shared/models/player.model';
-import { ApiResult, ApiService } from './api.service';
+import { Player } from '../../../shared/models/player.model';
+import { ApiResult, ApiService } from '../api.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PlayerService {
+export class AdminPlayerService {
   private readonly apiService = inject(ApiService);
-  
-  public setName(name: string): Observable<ApiResult<null>> {
-    return this.apiService.post<null>('/public/player/set-name', { name });
-  }
 
   public getPlayersForCurrentEvent(): Observable<ApiResult<Player[]>> {
     return of({
@@ -44,4 +40,3 @@ export class PlayerService {
     });
   }
 }
-

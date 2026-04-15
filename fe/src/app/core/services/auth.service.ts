@@ -17,7 +17,7 @@ export class AuthService {
   }
 
   public publicLogin(playerCode: string): Observable<ApiResult<null>> {
-    return this.apiService.post<null>('/public/login', {
+    return this.apiService.post<null>('/player/login', {
       playerCode,
     });
   }

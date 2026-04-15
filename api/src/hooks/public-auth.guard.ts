@@ -6,9 +6,4 @@ export async function publicAuthGuard(request: FastifyRequest, reply: FastifyRep
   } catch {
     return reply.status(401).send({ error: 'Unauthorized' });
   }
-
-  const payload = request.user as { role?: string };
-  if (payload.role !== 'player') {
-    return reply.status(403).send({ error: 'Forbidden' });
-  }
 }

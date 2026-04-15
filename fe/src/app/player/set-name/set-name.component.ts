@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { PlayerService } from '../../core/services/player.service';
+import { PlayerService } from '../../core/services/player/player.service';
 
 @Component({
   selector: 'app-set-name',

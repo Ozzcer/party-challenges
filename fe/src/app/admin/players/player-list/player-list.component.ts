@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { PlayerService } from '../../../core/services/player.service';
+import { AdminPlayerService } from '../../../core/services/admin/player.service';
 
 @Component({
   selector: 'app-player-list',
@@ -8,7 +8,7 @@ import { PlayerService } from '../../../core/services/player.service';
   styleUrl: './player-list.component.css',
 })
 export class PlayerListComponent {
-  private readonly playerService = inject(PlayerService);
+  private readonly playerService = inject(AdminPlayerService);
 
   public readonly players$ = this.playerService.getPlayersForCurrentEvent();
 }

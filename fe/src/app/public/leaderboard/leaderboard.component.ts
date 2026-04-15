@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { LoadingComponent } from '../../shared/loading/loading.component';
-import { LeaderboardService } from '../../core/services/leaderboard.service';
+import { LeaderboardService } from '../../core/services/public/leaderboard.service';
 
 @Component({
   selector: 'app-leaderboard',
