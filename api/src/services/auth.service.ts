@@ -1,6 +1,6 @@
 import type { Admin, Player } from '../generated/prisma/client';
 import { compareHash } from '../lib/hashing.lib';
-import { prisma } from '../lib/prisma';
+import { prisma } from '../lib/prisma.lib';
 
 export async function playerLogin(playerCode: string): Promise<Player | null> {
   return prisma.player.findFirst({
