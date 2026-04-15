@@ -1,5 +1,14 @@
 # Frontend
 
+## Shared Types
+
+All domain types are imported from `@party/shared`:
+
+- `shared/src/generated.ts` — auto-generated from the Prisma schema. Run `npx prisma generate` from `api/` to regenerate. Never edit manually.
+- `shared/src/*.model.ts` — hand-written types for response shapes and non-DB types (e.g. `User`, `Leaderboard`, `ApiError`).
+
+To add a new shared type: create `shared/src/my-thing.model.ts` and export it from `shared/src/index.ts`.
+
 ## Routes
 
 ### Player (`/`)
@@ -39,3 +48,4 @@
 | `AdminPlayerService` | `core/services/admin/player.service.ts` | View and manage player data (Admin only) |
 | `PlayerService` | `core/services/player/player.service.ts` | Fetch player data and manage own data (Player only) |
 | `LeaderboardService` | `core/services/public/leaderboard.service.ts` | Fetch all leaderboards |
+| `PlayerChallengeService` | `core/services/player/challenge.service.ts` | Manage challenge interactions for the current player |

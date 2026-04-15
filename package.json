@@ -16,7 +16,8 @@
   "private": true,
   "workspaces": [
     "api",
-    "fe"
+    "fe",
+    "shared"
   ],
   "scripts": {
     "start": "concurrently \"npm run dev -w api\" \"npm run start -w fe\"",

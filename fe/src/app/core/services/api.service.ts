@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
+import { ApiError, isApiError } from '@party/shared';
 
 @Injectable({
   providedIn: 'root',
@@ -61,17 +62,3 @@ export type ApiResult<T> = {
   error: ApiError;
 }
 
-export interface ApiError extends Error {
-  message: string;
-  statusCode: number;
-  name: string;
-  internalMessage?: string;
-  stack?: string;
-  originalError?: unknown;
-}
-
-export function isApiError(error: unknown): error is ApiError {
-  if(error === null || error === undefined) return false;
-  if(typeof error !== 'object') return false;
-  return 'statusCode' in error && 'message' in error && 'name' in error;
-}

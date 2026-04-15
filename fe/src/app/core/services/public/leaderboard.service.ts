@@ -1,14 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Attribute } from '../../../shared/models/attribute.model';
-import { Player } from '../../../shared/models/player.model';
+import type { Leaderboard } from '@party/shared';
 import { ApiResult, ApiService } from '../api.service';
-
-export interface Leaderboard {
-  players: Player[];
-  attribute: Attribute;
-  currentPlayerPosition?: number;
-}
 
 @Injectable({
   providedIn: 'root',

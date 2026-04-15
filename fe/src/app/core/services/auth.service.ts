@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
+import type { User } from '@party/shared';
 import { Observable } from 'rxjs';
-import { User } from '../../shared/models/user.model';
 import { ApiResult, ApiService } from './api.service';
 
 @Injectable({

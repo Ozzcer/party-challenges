@@ -3,6 +3,11 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+generator tsInterfaces {
+  provider = "prisma-generator-typescript-interfaces"
+  output   = "../../shared/src/generated.ts"
+}
+
 datasource db {
   provider = "sqlite"
 }

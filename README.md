@@ -4,20 +4,21 @@ A party game platform where players join via a code, compete in solo and adversa
 
 ## Stack
 
-- **API** — Fastify, Prisma (SQLite), JWT auth
-- **Frontend** — SvelteKit, Svelte 5
+- **API** — Fastify, Prisma (SQLite), JWT auth via httpOnly cookie
+- **Frontend** — Angular 21, TailwindCSS 4, RxJS
+- **Shared** — `@party/shared` package for domain types (generated from Prisma + hand-written response shapes)
 
-## Getting started
+## Getting Started
 
-Run from project root
 ```bash
 npm install
-npm start
+npm start       # starts API + FE concurrently
 ```
+
+API runs on `localhost:3000`, FE on `localhost:4200` (proxied to API via `/api`).
 
 ## Docs
 
-
-## TODO
- - [] create CRUD api under /admin
-
+- [`docs/api.md`](docs/api.md) — API architecture, auth, route groups, error handling
+- [`docs/front-end.md`](docs/front-end.md) — FE routes, services, shared types
+- [`docs/data-models.md`](docs/data-models.md) — Prisma data models

@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { FromSchema } from 'json-schema-to-ts';
-import { ApiError } from '../lib/error-handler.lib';
+import { AppError } from '../lib/error-handler.lib';
 import { adminLoginSchema } from '../schema/admin-login.schema';
 import { playerLoginSchema } from '../schema/player-login.schema';
 import { adminLogin, playerLogin } from '../services/auth.service';
@@ -14,7 +14,7 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
 
     const admin = await adminLogin(username, password);
     if (!admin) {
-      throw new ApiError('Invalid credentials', 401);
+      throw new AppError('Invalid credentials', 401);
     }
 
     const token = request.server.jwt.sign(
@@ -33,7 +33,7 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
 
     const player = await playerLogin(playerCode);
     if (!player) {
-      throw new ApiError('Invalid player code', 401);
+      throw new AppError('Invalid player code', 401);
     }
 
     // TODO enroll in current event
@@ -61,7 +61,7 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
       try {
         await request.jwtVerify();
       } catch (error) {
-        throw new ApiError('You are not logged in', 401);
+        throw new AppError('You are not logged in', 401);
       }
       reply.send(request.user);
     },

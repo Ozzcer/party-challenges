@@ -1,6 +1,7 @@
+import { ApiError } from '@party/shared';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-export class ApiError extends Error {
+export class AppError extends Error {
   constructor(
     message: string,
     public statusCode: number,
@@ -12,12 +13,16 @@ export class ApiError extends Error {
   }
 }
 
-export function errorHandler(error: unknown, request: FastifyRequest, reply: FastifyReply): void {
+export function errorHandler(
+  error: unknown,
+  _request: FastifyRequest,
+  reply: FastifyReply,
+): void {
   // TODO log
   // TODO minimise leaked info
 
-  if(error instanceof ApiError) {
-    reply.status(error.statusCode).send({
+  if (error instanceof AppError) {
+    sendResponse(reply, {
       message: error.message,
       internalMessage: error.internalMessage,
       stack: error.stack,
@@ -26,7 +31,7 @@ export function errorHandler(error: unknown, request: FastifyRequest, reply: Fas
       name: error.name,
     });
   } else if (error instanceof Error) {
-    reply.status(500).send({
+    sendResponse(reply, {
       message: error.message,
       internalMessage: 'Unrecognised error',
       stack: error.stack,
@@ -35,10 +40,16 @@ export function errorHandler(error: unknown, request: FastifyRequest, reply: Fas
       originalError: error,
     });
   } else {
-    reply.status(500).send({
+    sendResponse(reply, {
+      name: 'Error',
       message: 'Oops something went wrong, please try again later',
       internalMessage: 'Unknown error object',
       originalError: error,
+      statusCode: 500,
     });
   }
+}
+
+function sendResponse(reply: FastifyReply, apiError: ApiError): void {
+  reply.status(apiError.statusCode).send(apiError);
 }
