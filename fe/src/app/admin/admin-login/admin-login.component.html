@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="login()">
+  <label>
+    Username
+    <input type="text" formControlName="username" />
+  </label>
+
+  <label>
+    Password
+    <input type="password" formControlName="password" />
+  </label>
+
+  @if (result()) {
+    <span>{{ result() }}</span>
+  }
+
+  <button type="submit" [disabled]="form.invalid">
+    Login
+  </button>
+</form>

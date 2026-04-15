@@ -3,6 +3,11 @@ generator client {
   output   = "../src/generated/prisma"
 }
 
+generator tsInterfaces {
+  provider = "prisma-generator-typescript-interfaces"
+  output   = "../../shared/src/generated.ts"
+}
+
 datasource db {
   provider = "sqlite"
 }
@@ -20,7 +25,7 @@ model Attribute {
   name        String
   description String
   challenges  Challenge[]
-  entityAttributes EntityAttribute[]
+  entityAttributes TitleRequirement[]
   playerAttributeScores PlayerAttributeScore[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -108,7 +113,7 @@ model ChallengeInstance {
   challengeId  Int
   eventId      Int
   challenge    Challenge              @relation(fields: [challengeId], references: [id])
-  event        GameEvent                  @relation(fields: [eventId], references: [id])
+  event        GameEvent              @relation(fields: [eventId], references: [id])
   participants ChallengeParticipant[]
   createdAt    DateTime               @default(now())
   updatedAt    DateTime               @updatedAt
@@ -127,24 +132,31 @@ model ChallengeParticipant {
   @@unique([playerId, instanceId])
 }
 
-model Entity {
-  id          Int               @id @default(autoincrement())
-  name        String
-  imageUrl    String?
-  description String
-  attributes  EntityAttribute[]
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+enum TitleType {
+  SINGLE_REQUIREMENT
+  MULTI_REQUIREMENT_AVERAGE
 }
 
-model EntityAttribute {
+model Title {
+  id            Int               @id @default(autoincrement())
+  name          String
+  imageUrl      String?
+  description   String
+  requirements  TitleRequirement[]
+  titleType     TitleType
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+model TitleRequirement {
   id          Int       @id @default(autoincrement())
-  entityId    Int
+  titleId     Int
   attributeId Int
-  entity      Entity    @relation(fields: [entityId], references: [id])
+  title       Title    @relation(fields: [titleId], references: [id])
   attribute   Attribute @relation(fields: [attributeId], references: [id])
+  threshold   Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  @@unique([entityId, attributeId])
+  @@unique([titleId, attributeId])
 }

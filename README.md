@@ -4,51 +4,21 @@ A party game platform where players join via a code, compete in solo and adversa
 
 ## Stack
 
-- **API** — Fastify, Prisma (SQLite), JWT auth
-- **Frontend** — SvelteKit, Svelte 5
+- **API** — Fastify, Prisma (SQLite), JWT auth via httpOnly cookie
+- **Frontend** — Angular 21, TailwindCSS 4, RxJS
+- **Shared** — `@party/shared` package for domain types (generated from Prisma + hand-written response shapes)
 
-## Getting started
+## Getting Started
 
-Run from project root
 ```bash
 npm install
-npm run dev
+npm start       # starts API + FE concurrently
 ```
 
-## TODO
+API runs on `localhost:3000`, FE on `localhost:4200` (proxied to API via `/api`).
 
-- [x] **Event structure** — Challenges are grouped under named Events (name, description). Players are enrolled in an event, and challenge instances are scoped to it
-  - [x] Schema: add `Event` model (id, name, description, current, createdAt, updatedAt) — only one event may have `current = true`, enforced in service logic
-  - [x] Schema: add `EventPlayer` junction model (eventId, playerId, @@unique)
-  - [x] Schema: add `eventId` (required) to `ChallengeInstance`
-  - [x] Schema: add `eventId` (required) to `PlayerAttributeScore` — scores are scoped per event
-  - [x] Schema: run and verify migration
-  - [x] API: `event.service.ts` — createEvent (sets current, clears flag on others if ticked), listEvents, getEvent (with players + instances), getCurrentEvent
-  - [x] API: `event.service.ts` — updateEvent (name, description, current) — setting current clears the flag on all other events
-  - [x] API: `event.service.ts` — enrollPlayerInCurrentEvent(playerId) — called on player login, no-op if already enrolled
-  - [x] API: admin routes — `POST /admin/events`, `GET /admin/events`, `GET /admin/events/:id`, `PATCH /admin/events/:id`
-  - [x] API: update player login to auto-enroll player in the current event
-  - [x] API: update `admin.service.ts` getOverview to pull counts from the current event only
-  - [x] FE: admin event list page — shows all events with player + instance counts, highlights current
-  - [x] FE: admin create event form — name, description, current toggle
-  - [x] FE: admin event detail page — enrolled players, challenge instances and their statuses; inline edit for name, description, and current flag
-  - [ ] _(Future Goal)_ API + FE: score migration — copy scores from a past event into a new one with an optional multiplier
-- [ ] **Admin: create challenges** — Admins can create challenges tied to an attribute, with a description, score value, and type (solo/adversarial)
-- [ ] **Admin: assign players to challenges** — Admins can create challenge instances within an event and assign one or more players to them
-- [ ] **Admin: resolve challenges** — Admins mark a challenge instance as complete or failed; for adversarial challenges a winner is selected. Score is applied to the relevant player attribute on completion
-- [x] **Player login** — Players enter their unique code, then set their name on first login
-  - [x] API: player auth guard — `player.auth.guard.ts`, validates JWT role is `player`, mirrors admin guard
-  - [x] API: player routes — `player.routes.ts`, scoped group with player auth guard as preHandler, registered under `/public` prefix
-  - [x] API: `PATCH /public/me/name` — sets name on the authenticated player, returns 400 if name already set
-  - [x] API: `player.service.ts` — setPlayerName(playerId, name)
-  - [x] FE: `/login` page — player code entry form, calls `POST /public/login`, stores nameRequired from response
-  - [x] FE: `/set-name` page — shown after login if nameRequired, calls `PATCH /public/me/name`, redirects to player landing on success
-  - [x] FE: redirect to `/set-name` after login if nameRequired, else redirect to player landing
-- [ ] **Leaderboards** — Per-attribute leaderboard ranked by score, plus an overall leaderboard based on average score across all attributes
-- [ ] **Player landing: entity** — Players can view their linked entity (character/avatar), determined by their attribute scores
-- [ ] **Player landing: attributes** — Players can view their current attribute scores
-- [ ] **Player landing: challenge history** — Players can view past challenges, outcome, and score gained
-- [ ] **Admin: manage players** — View all players, see their scores, remove or reset a player
-- [ ] **Admin: event overview** — See all active challenge instances in an event, their status (open/completed/failed), and which players are involved
-- [ ] **Player: active challenges** — Players can see challenges currently assigned to them and their status
-- [ ] **Entity reveal** — Entity is hidden until a score threshold is reached, adding a discovery mechanic
+## Docs
+
+- [`docs/api.md`](docs/api.md) — API architecture, auth, route groups, error handling
+- [`docs/front-end.md`](docs/front-end.md) — FE routes, services, shared types
+- [`docs/data-models.md`](docs/data-models.md) — Prisma data models

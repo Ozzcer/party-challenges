@@ -1,0 +1,10 @@
+<form [formGroup]="form" (ngSubmit)="login()">
+  <label>
+    Player Code
+    <input formControlName="playerCode" type="text" placeholder="Player code" />
+  </label>
+  <button type="submit" [disabled]="form.invalid">Login</button>
+  @if (error()) {
+    <p>{{ error() }}</p>
+  }
+</form>

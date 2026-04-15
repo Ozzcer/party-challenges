@@ -10,6 +10,7 @@
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
     "@fastify/jwt": "^10.0.0",
+    "@party/shared": "*",
     "@prisma/adapter-better-sqlite3": "^7.7.0",
     "@prisma/client": "^7.7.0",
     "bcryptjs": "^3.0.3",
@@ -23,6 +24,7 @@
     "dotenv": "^16.6.1",
     "json-schema-to-ts": "^3.1.1",
     "prisma": "^7.7.0",
+    "prisma-generator-typescript-interfaces": "^3.1.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   }
