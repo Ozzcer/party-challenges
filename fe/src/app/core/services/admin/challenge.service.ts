@@ -6,14 +6,10 @@ import { ApiResult, ApiService } from '../api.service';
 @Injectable({
   providedIn: 'root',
 })
-export class ChallengeService {
+export class PlayerChallengeService {
   private readonly apiService = inject(ApiService);
 
   public getChallenges(): Observable<ApiResult<ProtectedChallengeInstance[]>> {
     return this.apiService.get<ProtectedChallengeInstance[]>('player/challenges');
-  }
-
-  public getCurrentChallenge(): Observable<ApiResult<ProtectedChallengeInstance>> {
-    return this.apiService.get<ProtectedChallengeInstance>('player/current-challenge');
   }
 }
