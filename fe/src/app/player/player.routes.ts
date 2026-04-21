@@ -6,9 +6,17 @@ import { playerSetupGuard } from '../core/guards/player-setup.guard';
 export const PLAYER_ROUTES: Routes = [
   {
     path: '',
-    canActivate: [playerSetupGuard],
     loadComponent: () =>
-      import('./landing/landing.component').then(m => m.LandingComponent),
+      import('./player-layout.component').then(m => m.PlayerLayoutComponent),
+    canActivate: [playerAuthGuard],
+    children: [
+      {
+        path: '',
+        canActivate: [playerSetupGuard],
+        loadComponent: () =>
+          import('./landing/landing.component').then(m => m.LandingComponent),
+      },
+    ],
   },
   {
     path: 'login',
