@@ -1,15 +1,47 @@
 import { inject, Injectable } from '@angular/core';
-import { ProtectedChallengeInstance } from '@party/shared';
+import {
+  Challenge,
+  ChallengeInstance,
+  CreateChallenge,
+  ResolveChallenge,
+  WithRequired,
+} from '@party/shared';
 import { Observable } from 'rxjs';
 import { ApiResult, ApiService } from '../api.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PlayerChallengeService {
+export class AdminChallengeService {
   private readonly apiService = inject(ApiService);
 
-  public getChallenges(): Observable<ApiResult<ProtectedChallengeInstance[]>> {
-    return this.apiService.get<ProtectedChallengeInstance[]>('player/challenges');
+  public getChallenges(): Observable<ApiResult<Challenge[]>> {
+    return this.apiService.get<Challenge[]>('admin/challenges');
+  }
+
+  public createChallenge(createChallenge: CreateChallenge): Observable<ApiResult<Challenge>> {
+    return this.apiService.post<Challenge>('/admin/challenges', createChallenge);
+  }
+
+  public getActiveChallengeInstances(): Observable<
+    ApiResult<WithRequired<ChallengeInstance, 'participants' | 'challenge'>[]>
+  > {
+    return this.apiService.get('/admin/challenge-instances/active');
+  }
+
+  public getChallengeInstance(
+    id: number,
+  ): Observable<ApiResult<WithRequired<ChallengeInstance, 'participants' | 'challenge'>>> {
+    return this.apiService.get('/admin/challenge-instances/' + id);
+  }
+
+  public resolveChallengeInstance(
+    id: number,
+    resolveChallenge: ResolveChallenge,
+  ): Observable<ApiResult<ChallengeInstance>> {
+    return this.apiService.post<ChallengeInstance>(
+      `/admin/challenge-instances/${id}/resolve`,
+      resolveChallenge,
+    );
   }
 }
