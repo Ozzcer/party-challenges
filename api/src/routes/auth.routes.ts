@@ -6,47 +6,61 @@ import { playerLoginSchema } from '../schema/player-login.schema';
 import { adminLogin, playerLogin } from '../services/auth.service';
 
 export async function authRoutes(fastify: FastifyInstance): Promise<void> {
-  fastify.post('/admin/login', async (
-    request: FastifyRequest<{ Body: FromSchema<typeof adminLoginSchema> }>,
-    reply: FastifyReply
-  ) => {
-    const { username, password } = request.body;
+  fastify.post(
+    '/admin/login',
+    async (
+      request: FastifyRequest<{ Body: FromSchema<typeof adminLoginSchema> }>,
+      reply: FastifyReply,
+    ) => {
+      const { username, password } = request.body;
 
-    const admin = await adminLogin(username, password);
-    if (!admin) {
-      throw new AppError('Invalid credentials', 401);
-    }
+      const admin = await adminLogin(username, password);
+      if (!admin) {
+        throw new AppError('Invalid credentials', 401);
+      }
 
-    const token = request.server.jwt.sign(
-      { id: admin.id, name: admin.username, role: 'admin' },
-      { expiresIn: '8h' },
-    );
-    reply.setCookie('token', token, { httpOnly: true, path: '/', sameSite: 'strict' });
-    reply.status(204).send();
-  });
+      const token = request.server.jwt.sign(
+        { id: admin.id, name: admin.username, role: 'admin' },
+        { expiresIn: '8h' },
+      );
+      reply.setCookie('token', token, {
+        httpOnly: true,
+        path: '/',
+        sameSite: 'strict',
+      });
+      reply.status(204).send();
+    },
+  );
 
-  fastify.post('/public/login', async (
-    request: FastifyRequest<{ Body: FromSchema<typeof playerLoginSchema> }>,
-    reply: FastifyReply
-  ): Promise<void> => {
-    const { playerCode } = request.body;
+  fastify.post(
+    '/player/login',
+    async (
+      request: FastifyRequest<{ Body: FromSchema<typeof playerLoginSchema> }>,
+      reply: FastifyReply,
+    ): Promise<void> => {
+      const { playerCode } = request.body;
 
-    const player = await playerLogin(playerCode);
-    if (!player) {
-      throw new AppError('Invalid player code', 401);
-    }
+      const player = await playerLogin(playerCode);
+      if (!player) {
+        throw new AppError('Invalid player code', 401);
+      }
 
-    // TODO enroll in current event
+      // TODO enroll in current event
 
-    const token = request.server.jwt.sign({
-      id: player.id,
-      name: player.name,
-      role: 'player',
-      playerCode: player.playerCode,
-    });
-    reply.setCookie('token', token, { httpOnly: true, path: '/', sameSite: 'strict' });
-    reply.status(200).send({ nameRequired: player.name === null });
-  });
+      const token = request.server.jwt.sign({
+        id: player.id,
+        name: player.name,
+        role: 'player',
+        playerCode: player.playerCode,
+      });
+      reply.setCookie('token', token, {
+        httpOnly: true,
+        path: '/',
+        sameSite: 'strict',
+      });
+      reply.status(200).send({ nameRequired: player.name === null });
+    },
+  );
 
   fastify.get(
     '/auth/logout',
