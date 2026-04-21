@@ -21,7 +21,9 @@
   ],
   "scripts": {
     "start": "concurrently \"npm run dev -w api\" \"npm run start -w fe\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "concurrently \"npm run build -w api\" \"npm run build -w fe\" && npm run copy:dist",
+    "copy:dist": "rm -rf dist && mkdir -p dist/api dist/fe && cp -r api/dist/. dist/api && cp -r fe/dist/fe/browser/. dist/fe"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
