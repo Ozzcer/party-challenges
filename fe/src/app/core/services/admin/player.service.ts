@@ -9,6 +9,10 @@ import { ApiResult, ApiService } from '../api.service';
 export class AdminPlayerService {
   private readonly apiService = inject(ApiService);
 
+  public getUnusedPlayerCodes(): Observable<ApiResult<string[]>> {
+    return this.apiService.get<string[]>('/admin/unused-player-codes');
+  }
+
   public getPlayersForCurrentEvent(): Observable<ApiResult<Player[]>> {
     return this.apiService.get<Player[]>('/admin/players');
   }

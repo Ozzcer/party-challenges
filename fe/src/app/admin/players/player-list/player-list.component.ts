@@ -12,4 +12,5 @@ export class PlayerListComponent {
   private readonly playerService = inject(AdminPlayerService);
 
   public readonly players = toSignal(this.playerService.getPlayersForCurrentEvent());
+  public readonly unusedPlayerCodes = toSignal(this.playerService.getUnusedPlayerCodes());
 }

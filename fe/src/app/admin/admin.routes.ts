@@ -5,6 +5,7 @@ import { AdminLayoutComponent } from './admin-layout.component';
 import { AdminLogin } from './admin-login/admin-login.component';
 import { AssignChallengeComponent } from './challenges/assign-challenge/assign-challenge.component';
 import { ChallengeListComponent } from './challenges/challenge-list/challenge-list.component';
+import { CreateChallengeComponent } from './challenges/create-challenge/create-challenge.component';
 import { ResolveChallengeComponent } from './challenges/resolve-challenge/resolve-challenge.component';
 import { LandingComponent } from './landing/landing.component';
 import { PlayerListComponent } from './players/player-list/player-list.component';
@@ -37,10 +38,15 @@ export const ADMIN_ROUTES: Routes = [
             children: [
               { path: '', component: ChallengeListComponent },
               {
+                path: 'create',
+                component: CreateChallengeComponent,
+              },
+              {
                 path: ':id',
                 children: [
                   { path: 'assign', component: AssignChallengeComponent },
                   { path: 'resolve', component: ResolveChallengeComponent },
+                  { path: '**', redirectTo: '/admin/challenges' },
                 ],
               },
             ],

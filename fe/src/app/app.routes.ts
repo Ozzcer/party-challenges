@@ -13,4 +13,8 @@ export const routes: Routes = [
     path: '',
     loadChildren: () => import('./player/player.routes').then(m => m.PLAYER_ROUTES),
   },
+  {
+    path: '**',
+    loadComponent: () => import('./shared/components/not-found.component').then(m => m.NotFoundComponent),
+  },
 ];
