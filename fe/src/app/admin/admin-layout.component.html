@@ -2,6 +2,18 @@
   <a routerLink="/admin">Home</a>
   <a routerLink="/admin/players">Players</a>
   <a routerLink="/admin/challenges">Challenges</a>
+
+  <form [formGroup]="searchForm" (ngSubmit)="searchByCode()">
+    <label>
+      Player code
+      <input type="text" formControlName="playerCode" placeholder="Player code" />
+    </label>
+    <button type="submit">Go</button>
+    @if (searchError()) {
+      <span>{{ searchError() }}</span>
+    }
+  </form>
+
   <button type="button" (click)="logout()">Logout</button>
 </nav>
 

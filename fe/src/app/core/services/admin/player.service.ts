@@ -12,4 +12,12 @@ export class AdminPlayerService {
   public getPlayersForCurrentEvent(): Observable<ApiResult<Player[]>> {
     return this.apiService.get<Player[]>('/admin/players');
   }
+
+  public getPlayer(id: number): Observable<ApiResult<Player>> {
+    return this.apiService.get<Player>('/admin/player/' + id);
+  }
+
+  public getPlayerIdByCode(code: string): Observable<ApiResult<number>> {
+    return this.apiService.get<number>('/admin/player-by-code/' + code);
+  }
 }
