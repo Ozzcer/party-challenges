@@ -4,6 +4,7 @@ import { AppError } from '../lib/error-handler.lib';
 import { adminLoginSchema } from '../schema/admin-login.schema';
 import { playerLoginSchema } from '../schema/player-login.schema';
 import { adminLogin, playerLogin } from '../services/auth.service';
+import { enrollInCurrentGameEvent } from '../services/game-event.service';
 
 export async function authRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.post(
@@ -45,7 +46,7 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
         throw new AppError('Invalid player code', 401);
       }
 
-      // TODO enroll in current event
+      await enrollInCurrentGameEvent(player.id);
 
       const token = request.server.jwt.sign({
         id: player.id,
