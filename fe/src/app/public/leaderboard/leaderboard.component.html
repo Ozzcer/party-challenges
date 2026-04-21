@@ -2,9 +2,9 @@
 @if (result === undefined) {
   <app-loading />
 } @else if (result.success) {
-  @for (lb of result.result; track lb.attribute.id) {
+  @for (lb of result.result; track lb.title.id) {
     <section>
-      <h2>{{ lb.attribute.name }}</h2>
+      <h2>{{ lb.title.name }}</h2>
       <ol>
         @for (player of lb.players; track player.id) {
           <li>{{ player.name }}</li>

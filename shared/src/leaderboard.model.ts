@@ -1,7 +1,8 @@
-import type { Attribute, Player } from './generated';
+import type { Title } from './generated';
+import { ProtectedPlayer } from './protected.model';
 
 export interface Leaderboard {
-  players: Player[];
-  attribute: Attribute;
+  players: ProtectedPlayer[];
+  title: Title;
   currentPlayerPosition?: number;
 }

@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AdminPlayerService } from '../../../core/services/admin/player.service';
 
 @Component({
@@ -10,5 +11,5 @@ import { AdminPlayerService } from '../../../core/services/admin/player.service'
 export class PlayerListComponent {
   private readonly playerService = inject(AdminPlayerService);
 
-  public readonly players$ = this.playerService.getPlayersForCurrentEvent();
+  public readonly players = toSignal(this.playerService.getPlayersForCurrentEvent());
 }
