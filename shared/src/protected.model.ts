@@ -12,11 +12,9 @@ import type {
   TitleRequirement,
 } from './generated';
 
-// Sensitive fields stripped
 export type ProtectedPlayer = Omit<Player, 'playerCode'>;
 export type ProtectedAdmin = Omit<Admin, 'password'>;
 
-// Relations with Player swapped to ProtectedPlayer
 export type ProtectedGameEventPlayer = Omit<GameEventPlayer, 'player'> & {
   player?: ProtectedPlayer;
 };
@@ -29,7 +27,6 @@ export type ProtectedChallengeParticipant = Omit<ChallengeParticipant, 'player'>
   player?: ProtectedPlayer;
 };
 
-// Cascaded protected relations
 export type ProtectedChallengeInstance = Omit<ChallengeInstance, 'participants'> & {
   participants?: ProtectedChallengeParticipant[];
 };
@@ -39,7 +36,6 @@ export type ProtectedGameEvent = Omit<GameEvent, 'players' | 'playerAttributeSco
   playerAttributeScores?: ProtectedPlayerAttributeScore[];
 };
 
-// No sensitive fields — aliases for consistency
 export type ProtectedAttribute = Attribute;
 export type ProtectedChallenge = Challenge;
 export type ProtectedTitle = Title;
