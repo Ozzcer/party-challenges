@@ -9,7 +9,7 @@ export interface CreateChallenge {
 
 export type ResolveChallenge = {
   status: Extract<ChallengeStatus, 'COMPLETED'>
-  winningPlayer?: number;
+  winningPlayer: number;
 } | {
   status: Extract<ChallengeStatus, 'FAILED'>
 }

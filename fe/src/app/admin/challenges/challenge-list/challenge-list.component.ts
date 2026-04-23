@@ -12,6 +12,7 @@ import {
   OperatorFunction,
   scan,
   shareReplay,
+  startWith,
   Subject,
   switchMap,
   tap,
@@ -61,6 +62,7 @@ export class ChallengeListComponent {
       }
       return players.filter((player) => player.id !== action.id);
     }, [] as PlayerEntry[]),
+    startWith([]), // TODO this double sends, make it not by creating a starting action from query param
     shareReplay(),
   );
 

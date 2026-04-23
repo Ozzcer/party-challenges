@@ -1,1 +1,23 @@
-<p>resolve works!</p>
+<h1>Challenge Instance</h1>
+<ng-container *appLoadSignal="challengeInstance(); let challengeInstance">
+  <h2>{{challengeInstance.challenge.description}}</h2>
+  @if (unresolved()) {
+    <button (click)="markAsFailed(challengeInstance.id)">Mark as failed</button>
+  }
+  @for (participant of challengeInstance.participants; track participant.id) {
+    <div>
+      <a routerLink="/admin/players/{{participant.playerId}}">{{participant.player.name}}</a>
+      @switch (participant.status) {
+        @case ('OPEN') {
+          <button (click)="setWinner(participant.player, challengeInstance.id)">Set Winner</button>
+        }
+        @case ('COMPLETED') {
+          <p>Winner!</p>
+        }
+        @case ('FAILED') {
+          <p>Failed...</p>
+        }
+      }
+    </div>
+  }
+</ng-container>

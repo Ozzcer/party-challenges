@@ -28,7 +28,11 @@
           <p>{{ challenge.description }}</p>
           <p>{{ challenge.type | titlecase }}</p>
           <p>{{ challenge.score }}</p>
-          <button (click)="assignChallenge(challenge.id, playerList)">Assign challenge</button>
+          @if (playerList.length > 0) {
+            <button (click)="assignChallenge(challenge.id, playerList)">Assign challenge</button>
+          } @else {
+            <p>Add a player above to assign a challenge</p>
+          }
         </div>
       }
     </ng-container>

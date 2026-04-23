@@ -4,22 +4,31 @@
   <section>
     <h2>Player Stats</h2>
     @for (score of player.playerAttributeScores; track score.id) {
-      <p>{{score.attribute.name}}: {{score.score}}</p>
+      <p>{{ score.attribute.name }}: {{ score.score }}</p>
     }
   </section>
 
   <section>
     <h2>Current Challenge</h2>
     <ng-container
-      *appLoadSignal="currentChallenge(); let currentChallenge; errorTemplate: challengeErrorTemplate"
+      *appLoadSignal="
+        currentChallenge();
+        let currentChallenge;
+        errorTemplate: challengeErrorTemplate
+      "
     >
-      {{ currentChallenge.challengeId }}
+      <div>
+        <p>{{ currentChallenge.challenge.description }}</p>
+        <a routerLink="/admin/challenge-instances/{{ currentChallenge.id }}/resolve">Resolve Challenge</a>
+      </div>
     </ng-container>
 
     <ng-template #challengeErrorTemplate let-error>
       @if (error.statusCode === 404) {
         <p>No active challenge.</p>
-        <a routerLink="/admin/challenges" [queryParams]="{ playerCode: player.playerCode }">Assign Challenge</a>
+        <a routerLink="/admin/challenges" [queryParams]="{ playerCode: player.playerCode }"
+          >Assign Challenge</a
+        >
       } @else {
         <p>{{ error.message }}</p>
       }
@@ -34,7 +43,6 @@
       }
     </ng-container>
   </section>
-
 </ng-container>
 
 <!-- TODO completed challenges -->

@@ -189,11 +189,38 @@ export async function getPlayersIncludeActiveChallenge(
   return await prisma.player.findMany({
     where: {
       id: { in: playerIds },
+      events: {
+        some: {
+          event: {
+            id: eventId,
+          },
+        },
+      },
     },
     include: {
       challengeParticipation: {
         where: { status: 'OPEN' },
       },
+    },
+  });
+}
+
+export async function incrementPlayerAttributeScore(
+  playerId: number,
+  eventId: number,
+  attributeId: number,
+  score: number,
+) {
+  await prisma.playerAttributeScore.update({
+    where: {
+      playerId_attributeId_eventId: {
+        attributeId,
+        eventId,
+        playerId,
+      },
+    },
+    data: {
+      score: { increment: score },
     },
   });
 }

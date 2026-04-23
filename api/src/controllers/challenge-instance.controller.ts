@@ -1,4 +1,7 @@
-import type { ResolveChallenge } from '@party/shared';
+import type {
+  ProtectedChallengeInstanceDetails,
+  ResolveChallenge,
+} from '@party/shared';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { FromSchema } from 'json-schema-to-ts';
 import { AppError } from '../lib/error-handler.lib';
@@ -11,11 +14,14 @@ import {
   assignChallenge,
   getActiveInstances,
   getInstanceById,
-  resolveInstance,
+  setParticipantsStatus,
 } from '../services/challenge-instance.service';
 import { getChallengeById } from '../services/challenge.service';
 import { getCurrentGameEvent } from '../services/game-event.service';
-import { getPlayersIncludeActiveChallenge } from '../services/player.service';
+import {
+  getPlayersIncludeActiveChallenge,
+  incrementPlayerAttributeScore,
+} from '../services/player.service';
 
 export async function getActiveInstancesHandler(
   _request: FastifyRequest,
@@ -78,6 +84,58 @@ export async function resolveInstanceHandler(
   }>,
   reply: FastifyReply,
 ): Promise<void> {
-  const instance = await resolveInstance(request.params.id, request.body);
-  reply.send(instance);
+  const instance = await getInstanceById(request.params.id);
+  if (!instance) throw new AppError('Challenge instance not found', 404);
+
+  if (request.body.status === 'COMPLETED') {
+    await resolveInstanceAsCompleted(instance, request.body.winningPlayer);
+  } else {
+    await resolveInstanceAsFailed(instance);
+  }
+
+  reply.status(204).send();
+}
+
+async function resolveInstanceAsFailed(
+  instance: ProtectedChallengeInstanceDetails,
+): Promise<void> {
+  const ids = instance.participants.map((participant) => {
+    if (participant.status !== 'OPEN') {
+      throw new AppError('Challenge already resolved', 400);
+    }
+    return participant.id;
+  });
+
+  await setParticipantsStatus(ids, 'FAILED');
+}
+
+async function resolveInstanceAsCompleted(
+  instance: ProtectedChallengeInstanceDetails,
+  winnerId: number,
+): Promise<void> {
+  const losingParticipantIds: number[] = [];
+  let winnerFound = false;
+  for (const participant of instance.participants) {
+    if (participant.status !== 'OPEN') {
+      throw new AppError('Challenge already resolved', 400);
+    }
+    if (participant.playerId === winnerId) {
+      winnerFound = true;
+    } else {
+      losingParticipantIds.push(participant.playerId);
+    }
+  }
+
+  if (!winnerFound) {
+    throw new AppError('Selected winner is not in challenge', 400);
+  }
+
+  await setParticipantsStatus(losingParticipantIds, 'FAILED');
+  await setParticipantsStatus([winnerId], 'COMPLETED');
+  await incrementPlayerAttributeScore(
+    winnerId,
+    instance.eventId,
+    instance.challenge.attributeId,
+    instance.challenge.score,
+  );
 }
