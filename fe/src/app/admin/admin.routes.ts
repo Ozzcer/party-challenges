@@ -3,7 +3,6 @@ import { adminAuthGuard } from '../core/guards/admin-auth.guard';
 import { adminNoAuthGuard } from '../core/guards/admin-no-auth.guard';
 import { AdminLayoutComponent } from './admin-layout.component';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
-import { AssignChallengeComponent } from './challenges/assign-challenge/assign-challenge.component';
 import { ChallengeListComponent } from './challenges/challenge-list/challenge-list.component';
 import { CreateChallengeComponent } from './challenges/create-challenge/create-challenge.component';
 import { ResolveChallengeComponent } from './challenges/resolve-challenge/resolve-challenge.component';
@@ -43,10 +42,7 @@ export const ADMIN_ROUTES: Routes = [
               },
               {
                 path: ':id',
-                children: [
-                  { path: 'assign', component: AssignChallengeComponent },
-                  { path: '**', redirectTo: '/admin/challenges' },
-                ],
+                children: [{ path: '**', redirectTo: '/admin/challenges' }],
               },
             ],
           },
