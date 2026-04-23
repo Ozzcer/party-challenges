@@ -7,7 +7,7 @@ import { AssignChallengeComponent } from './challenges/assign-challenge/assign-c
 import { ChallengeListComponent } from './challenges/challenge-list/challenge-list.component';
 import { CreateChallengeComponent } from './challenges/create-challenge/create-challenge.component';
 import { ResolveChallengeComponent } from './challenges/resolve-challenge/resolve-challenge.component';
-import { AdminLandingComponent } from './landing/landing.component';
+import { AdminLandingComponent } from './landing/admin-landing.component';
 import { PlayerListComponent } from './players/player-list/player-list.component';
 import { PlayerComponent } from './players/player/player.component';
 

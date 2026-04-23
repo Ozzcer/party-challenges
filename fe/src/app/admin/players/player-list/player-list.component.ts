@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { AdminPlayerService } from '../../../core/services/admin/player.service';
+import { AdminPlayerService } from '../../../core/services/admin/admin-player.service';
 
 @Component({
   selector: 'app-player-list',

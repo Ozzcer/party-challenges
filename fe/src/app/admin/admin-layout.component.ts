@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../core/services/auth.service';
-import { AdminPlayerService } from '../core/services/admin/player.service';
+import { AdminPlayerService } from '../core/services/admin/admin-player.service';
 
 @Component({
   selector: 'app-admin-layout',
