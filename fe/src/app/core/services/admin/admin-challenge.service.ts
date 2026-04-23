@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import {
   Challenge,
+  ChallengeDetails,
   ChallengeInstance,
   CreateChallenge,
   ProtectedChallengeInstanceDetails,
@@ -17,6 +18,12 @@ export class AdminChallengeService {
 
   public getChallenges(): Observable<ApiResult<Challenge[]>> {
     return this.apiService.get<Challenge[]>('admin/challenges');
+  }
+
+  public getUncompletedChallengesByPlayers(
+    playerIds: number[],
+  ): Observable<ApiResult<ChallengeDetails[]>> {
+    return this.apiService.post<ChallengeDetails[]>('admin/challenges/uncompleted', { playerIds });
   }
 
   public createChallenge(createChallenge: CreateChallenge): Observable<ApiResult<Challenge>> {

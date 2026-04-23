@@ -5,7 +5,7 @@ import {
   getInstanceHandler,
   resolveInstanceHandler,
 } from '../controllers/challenge-instance.controller';
-import { getChallenges, postChallenge } from '../controllers/challenge.controller';
+import { getChallenges, getUncompletedChallengesHandler, postChallenge } from '../controllers/challenge.controller';
 import {
   getEarnedTitlesByIdHandler,
   getPlayerByCodeHandler,
@@ -19,7 +19,7 @@ import {
   instanceIdParamsSchema,
   resolveChallengeBodySchema,
 } from '../schema/challenge-instance.schema';
-import { createChallengeBodySchema } from '../schema/challenge.schema';
+import { createChallengeBodySchema, uncompletedChallengesBodySchema } from '../schema/challenge.schema';
 import { playerCodeParamsSchema, playerIdParamsSchema } from '../schema/player.schema';
 import { getCurrentGameEvent } from '../services/game-event.service';
 import type { ResolveChallenge } from '@party/shared';
@@ -29,6 +29,12 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
     adminFastify.addHook('preHandler', adminAuthGuard);
 
     adminFastify.get('/challenges', getChallenges);
+
+    adminFastify.post<{ Body: FromSchema<typeof uncompletedChallengesBodySchema> }>(
+      '/challenges/uncompleted',
+      { schema: { body: uncompletedChallengesBodySchema } },
+      getUncompletedChallengesHandler,
+    );
 
     adminFastify.post<{ Body: FromSchema<typeof createChallengeBodySchema> }>(
       '/challenges',

@@ -1,1 +1,11 @@
-<p>challenges works!</p>
+<h1>Challenges</h1>
+<section>
+  <ng-container *appLoadSignal="challenges(); let challenges">
+    @for (challenge of challenges; track challenge.id) {
+      <a style="display: block;">
+        <p>{{challenge.attribute.name}}</p>
+        <p>{{challenge.description}}</p>
+      </a>
+    }
+  </ng-container>
+</section>
