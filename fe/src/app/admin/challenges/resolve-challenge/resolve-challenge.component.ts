@@ -4,6 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-resolve-challenge',
   imports: [],
   templateUrl: './resolve-challenge.component.html',
-  styleUrl: './resolve-challenge.component.css',
+  styleUrl: './resolve-challenge.component.scss',
 })
 export class ResolveChallengeComponent {}

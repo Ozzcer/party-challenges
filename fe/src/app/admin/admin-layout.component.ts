@@ -8,6 +8,7 @@ import { AdminPlayerService } from '../core/services/admin/player.service';
   selector: 'app-admin-layout',
   imports: [RouterOutlet, RouterLink, ReactiveFormsModule],
   templateUrl: './admin-layout.component.html',
+  styleUrl: './admin-layout.component.scss',
 })
 export class AdminLayoutComponent {
   private readonly authService = inject(AuthService);

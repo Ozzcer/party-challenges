@@ -6,6 +6,7 @@ import { AuthService } from '../core/services/auth.service';
   selector: 'app-player-layout',
   imports: [RouterOutlet, RouterLink],
   templateUrl: './player-layout.component.html',
+  styleUrl: './player-layout.component.scss',
 })
 export class PlayerLayoutComponent {
   private readonly authService = inject(AuthService);

@@ -7,7 +7,7 @@ import { LeaderboardService } from '../../core/services/public/leaderboard.servi
   selector: 'app-leaderboard',
   imports: [LoadingComponent],
   templateUrl: './leaderboard.component.html',
-  styleUrl: './leaderboard.component.css',
+  styleUrl: './leaderboard.component.scss',
 })
 export class LeaderboardComponent {
   private readonly leaderboardService = inject(LeaderboardService);

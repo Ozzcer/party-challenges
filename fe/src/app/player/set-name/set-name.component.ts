@@ -7,7 +7,7 @@ import { PlayerService } from '../../core/services/player/player.service';
   selector: 'app-set-name',
   imports: [ReactiveFormsModule],
   templateUrl: './set-name.component.html',
-  styleUrl: './set-name.component.css',
+  styleUrl: './set-name.component.scss',
 })
 export class SetNameComponent {
   private readonly playerService = inject(PlayerService);

@@ -8,6 +8,7 @@ import { AuthService } from '../../core/services/auth.service';
   selector: 'app-not-found',
   imports: [RouterLink],
   templateUrl: './not-found.component.html',
+  styleUrl: './not-found.component.scss',
 })
 export class NotFoundComponent {
   private readonly authService = inject(AuthService);

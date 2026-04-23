@@ -8,7 +8,7 @@ import { AdminPlayerService } from '../../../core/services/admin/player.service'
   selector: 'app-player',
   imports: [],
   templateUrl: './player.component.html',
-  styleUrl: './player.component.css',
+  styleUrl: './player.component.scss',
 })
 export class PlayerComponent {
   private readonly adminPlayerService = inject(AdminPlayerService);

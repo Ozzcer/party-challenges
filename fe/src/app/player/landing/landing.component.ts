@@ -10,7 +10,7 @@ import { TitleService } from '../../core/services/player/title.service';
   selector: 'app-landing',
   imports: [JsonPipe],
   templateUrl: './landing.component.html',
-  styleUrl: './landing.component.css',
+  styleUrl: './landing.component.scss',
 })
 export class LandingComponent {
   private readonly challengeService = inject(ChallengeService);

@@ -7,8 +7,9 @@ import { AuthService } from '../../core/services/auth.service';
   selector: 'app-admin-login',
   imports: [ReactiveFormsModule],
   templateUrl: './admin-login.component.html',
+  styleUrl: './admin-login.component.scss',
 })
-export class AdminLogin {
+export class AdminLoginComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 

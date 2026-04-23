@@ -6,8 +6,8 @@ import { AdminEventService } from '../../core/services/admin/event.service';
   selector: 'app-landing',
   imports: [],
   templateUrl: './landing.component.html',
-  styleUrl: './landing.component.css',
+  styleUrl: './landing.component.scss',
 })
-export class LandingComponent {
+export class AdminLandingComponent {
   public readonly currentEvent = toSignal(inject(AdminEventService).getCurrentEvent());
 }

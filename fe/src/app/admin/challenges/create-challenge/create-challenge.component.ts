@@ -4,6 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-create-challenge',
   imports: [],
   templateUrl: './create-challenge.component.html',
-  styleUrl: './create-challenge.component.css',
+  styleUrl: './create-challenge.component.scss',
 })
 export class CreateChallengeComponent {}

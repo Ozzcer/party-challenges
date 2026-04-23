@@ -7,7 +7,7 @@ import { AuthService } from '../../core/services/auth.service';
   selector: 'app-player-login',
   imports: [ReactiveFormsModule],
   templateUrl: './player-login.component.html',
-  styleUrl: './player-login.component.css',
+  styleUrl: './player-login.component.scss',
 })
 export class PlayerLoginComponent {
   private readonly authService = inject(AuthService);
