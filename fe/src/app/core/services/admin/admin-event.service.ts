@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import type { GameEvent } from '@party/shared';
+import type { CurrentGameEvent } from '@party/shared';
 import { Observable } from 'rxjs';
 import { ApiResult, ApiService } from '../api.service';
 
@@ -9,7 +9,7 @@ import { ApiResult, ApiService } from '../api.service';
 export class AdminEventService {
   private readonly apiService = inject(ApiService);
 
-  public getCurrentEvent(): Observable<ApiResult<GameEvent>> {
-    return this.apiService.get<GameEvent>('/admin/current-event');
+  public getCurrentEvent(): Observable<ApiResult<CurrentGameEvent>> {
+    return this.apiService.get<CurrentGameEvent>('/admin/current-event');
   }
 }

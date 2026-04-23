@@ -20,7 +20,7 @@ export class LandingComponent {
   public readonly user = toSignal(
     inject(AuthService).user$.pipe(
       map((user) => {
-        if (user.role === 'admin') throw new Error('Player user expected');
+        if (user.role !== 'player') throw new Error('Player user expected');
         return user;
       }),
     ),

@@ -1,1 +1,13 @@
-{{ currentEvent() }}
+<h1>Welcome {{ user().name }}</h1>
+
+<section>
+  
+</section>
+<ng-container *appLoadSignal="currentEvent(); let currentEvent">
+  <section>
+    <h1>{{currentEvent.name}}</h1>
+    <h2>{{currentEvent.description}}</h2>
+    <p>Total players: {{currentEvent.totalPlayers}}</p>
+    <p>Total challenges taken on: {{currentEvent.totalChallengeInstances}} </p>
+  </section>
+</ng-container>

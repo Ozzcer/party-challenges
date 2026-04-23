@@ -1,13 +1,30 @@
-import { GameEvent } from '@party/shared';
+import { CurrentGameEvent } from '@party/shared';
 import { AppError } from '../lib/error-handler.lib';
 import { prisma } from '../lib/prisma.lib';
 
-export async function getCurrentGameEvent(): Promise<GameEvent | null> {
-  return await prisma.gameEvent.findFirst({
+export async function getCurrentGameEvent(): Promise<CurrentGameEvent | null> {
+  const gameEvent = await prisma.gameEvent.findFirst({
     where: {
       current: true,
     },
+    include: {
+      _count: {
+        select: {
+          players: true,
+          challengeInstances: true,
+        },
+      },
+    },
   });
+
+  if (!gameEvent) return null;
+
+  return {
+    ...gameEvent,
+    current: true,
+    totalChallengeInstances: gameEvent._count.challengeInstances,
+    totalPlayers: gameEvent._count.players,
+  };
 }
 
 export async function enrollInCurrentGameEvent(
@@ -20,11 +37,11 @@ export async function enrollInCurrentGameEvent(
     include: {
       players: {
         include: {
-          player: true
+          player: true,
         },
         where: {
-          playerId
-        }
+          playerId,
+        },
       },
     },
   });

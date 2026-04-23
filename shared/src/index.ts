@@ -1,4 +1,5 @@
 export * from './api-error.model';
+export * from './current-game-event.model';
 export * from './generated';
 export * from './leaderboard.model';
 export * from './protected.model';

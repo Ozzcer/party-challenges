@@ -126,6 +126,7 @@ async function seedTitles() {
       description: 'whimsy',
       name: 'whimsy',
       titleType: 'SINGLE_REQUIREMENT',
+      imageUrl: '/images/moon.png',
       requirements: {
         create: [
           {
@@ -139,6 +140,7 @@ async function seedTitles() {
       description: 'res',
       name: 'res',
       titleType: 'SINGLE_REQUIREMENT',
+      imageUrl: '/images/strength.png',
       requirements: {
         create: [
           {
@@ -152,6 +154,7 @@ async function seedTitles() {
       description: 'wis',
       name: 'wis',
       titleType: 'SINGLE_REQUIREMENT',
+      imageUrl: '/images/hermit.png',
       requirements: {
         create: [
           {
@@ -165,6 +168,7 @@ async function seedTitles() {
       description: 'avg',
       name: 'avg',
       titleType: 'MULTI_REQUIREMENT_AVERAGE',
+      imageUrl: '/images/star.png',
       requirements: {
         create: [
           {
