@@ -8,6 +8,7 @@ const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL! });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
+  await seedEvent();
   await seedAttributes();
   await seedChallenges();
   await seedAdmins();
@@ -23,6 +24,16 @@ main()
     await prisma.$disconnect();
     process.exit(1);
   });
+
+async function seedEvent() {
+  await prisma.gameEvent.create({
+    data: {
+      current: true,
+      description: 'Launch Party',
+      name: 'What came before',
+    },
+  });
+}
 
 async function seedAttributes() {
   const attributes = [

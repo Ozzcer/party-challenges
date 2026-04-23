@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { FromSchema } from 'json-schema-to-ts';
 import { AppError } from '../lib/error-handler.lib';
+import { setToken } from '../lib/set-token.lib';
 import { adminLoginSchema } from '../schema/admin-login.schema';
 import { playerLoginSchema } from '../schema/player-login.schema';
 import { adminLogin, playerLogin } from '../services/auth.service';
@@ -20,14 +21,10 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
         throw new AppError('Invalid credentials', 401);
       }
 
-      const token = request.server.jwt.sign(
-        { id: admin.id, name: admin.username, role: 'admin' },
-        { expiresIn: '8h' },
-      );
-      reply.setCookie('token', token, {
-        httpOnly: true,
-        path: '/',
-        sameSite: 'strict',
+      setToken(request, reply, {
+        id: admin.id,
+        name: admin.username,
+        role: 'admin',
       });
       reply.status(204).send();
     },
@@ -48,17 +45,13 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
 
       await enrollInCurrentGameEvent(player.id);
 
-      const token = request.server.jwt.sign({
+      setToken(request, reply, {
         id: player.id,
         name: player.name,
         role: 'player',
         playerCode: player.playerCode,
       });
-      reply.setCookie('token', token, {
-        httpOnly: true,
-        path: '/',
-        sameSite: 'strict',
-      });
+
       reply.status(200).send({ nameRequired: player.name === null });
     },
   );

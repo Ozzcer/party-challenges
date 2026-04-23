@@ -6,7 +6,7 @@ export type User =
     }
   | {
       id: number;
-      name: string;
+      name: string | null;
       role: 'player';
-      playerCode: number;
+      playerCode: string;
     };

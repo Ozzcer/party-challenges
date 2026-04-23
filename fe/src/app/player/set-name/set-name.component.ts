@@ -23,6 +23,7 @@ export class SetNameComponent {
     if (this.form.invalid) return;
 
     this.playerService.setName(this.form.value.name!).subscribe(res => {
+      console.log('here', res);
       if (res.success) {
         this.router.navigateByUrl('/');
       } else {

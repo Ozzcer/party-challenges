@@ -1,14 +1,15 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { FromSchema } from 'json-schema-to-ts';
 import { AppError } from '../lib/error-handler.lib';
+import { setToken } from '../lib/set-token.lib';
 import {
   playerCodeParamsSchema,
   playerIdParamsSchema,
   setNameBodySchema,
 } from '../schema/player.schema';
 import {
-  getPlayerById,
   getPlayerByCode,
+  getPlayerById,
   getPlayerChallenges,
   getPlayerCurrentChallenge,
   getPlayerDetails,
@@ -56,7 +57,13 @@ export async function setNameHandler(
   request: FastifyRequest<{ Body: FromSchema<typeof setNameBodySchema> }>,
   reply: FastifyReply,
 ): Promise<void> {
+  const user = request.user;
+  if (user.role === 'admin') throw new AppError('Admin cannot set name', 400);
   await setPlayerName(request.user.id, request.body.name);
+  setToken(request, reply, {
+    ...user,
+    name: request.body.name,
+  });
   reply.status(204).send();
 }
 

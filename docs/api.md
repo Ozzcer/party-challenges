@@ -36,27 +36,49 @@ Guards are applied at the route group level via `preHandler` hooks.
 | Method | Path | Body | Response | Purpose |
 |--------|------|------|----------|---------|
 | `POST` | `/admin/login` | `{ username, password }` | `204` | Admin login, sets JWT cookie |
-| `POST` | `/public/login` | `{ playerCode }` | `{ nameRequired: boolean }` | Player login, sets JWT cookie |
+| `POST` | `/player/login` | `{ playerCode }` | `{ nameRequired: boolean }` | Player login, sets JWT cookie |
 | `GET` | `/auth/logout` | — | `204` | Clears JWT cookie |
 | `GET` | `/auth/me` | — | `User` | Returns current session user |
 
 ### Admin (`/admin`)
 
-> Shell — routes to be implemented
+| Method | Path | Body | Response | Purpose |
+|--------|------|------|----------|---------|
+| `GET` | `/admin/challenges` | — | `Challenge[]` | List all challenges |
+| `POST` | `/admin/challenges` | `CreateChallenge` | `Challenge` | Create a challenge |
+| `GET` | `/admin/challenge-instances/active` | — | `WithRequired<ChallengeInstance, 'participants' \| 'challenge'>[]` | Active instances (≥1 OPEN participant) with nested data |
+| `GET` | `/admin/challenge-instances/:id` | — | `WithRequired<ChallengeInstance, 'participants' \| 'challenge'>` | Single instance with nested data |
+| `POST` | `/admin/challenge-instances/:id/resolve` | `ResolveChallenge` | `ChallengeInstance` | Resolve instance; awards score to winner |
+| `GET` | `/admin/current-event` | — | `GameEvent \| null` | Active game event |
+| `GET` | `/admin/players` | — | `Player[]` | All players in current event |
+| `GET` | `/admin/player/:id` | — | `Player` | Single player by ID |
+| `GET` | `/admin/player-by-code/:code` | — | `number` | Look up player ID by player code |
+| `GET` | `/admin/unused-player-codes` | — | `string[]` | Player codes where name is not set |
 
 ### Player (`/player`)
 
-> Shell — routes to be implemented
+All routes require a valid player JWT (`playerAuthGuard`).
+
+| Method | Path | Body | Response | Purpose |
+|--------|------|------|----------|---------|
+| `POST` | `/player/set-name` | `{ name: string }` | `204` | Set player display name |
+| `GET` | `/player/is-enrolled` | — | `boolean` | Whether player is enrolled in current event |
+| `GET` | `/player/details` | — | `ProtectedPlayer` | Current player profile |
+| `GET` | `/player/challenges` | — | `ProtectedChallengeInstance[]` | Instances the player is a participant in |
+| `GET` | `/player/current-challenge` | — | `ProtectedChallengeInstance` | Player's active (OPEN) challenge |
+| `GET` | `/player/titles` | — | `ProtectedTitle[]` | Titles currently held by this player |
 
 ### Public (`/public`)
 
-> Shell — routes to be implemented
+| Method | Path | Body | Response | Purpose |
+|--------|------|------|----------|---------|
+| `GET` | `/public/leaderboards` | — | `Leaderboard[]` | One leaderboard per Title, players sorted by score |
 
 ---
 
 ## Response Types
 
-All routes must define a response schema. Routes under `/player` and `/public` that return DB model data must use `Protected*` types from `@party/shared` to prevent sensitive field leakage (e.g. `playerCode`, `password`).
+Routes under `/player` and `/public` that return DB model data must use `Protected*` types from `@party/shared` to prevent sensitive field leakage (e.g. `playerCode`, `password`).
 
 See `shared/src/protected.model.ts` for all available protected types.
 
@@ -70,6 +92,7 @@ src/
 ├── hooks/        # Auth guards (preHandler hooks)
 ├── schema/       # JSON Schema definitions for request/response validation
 ├── lib/          # Utilities (error handler, prisma client, hashing)
+├── types/        # Global type augmentations (e.g. fastify-jwt.d.ts)
 └── generated/
     └── prisma/   # Prisma generated client (gitignored, do not edit)
 ```
