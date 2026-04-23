@@ -1,0 +1,21 @@
+@let challengeData = challenge();
+<p>
+  {{ challengeData.challenge.attribute.name }} | {{ challengeData.challenge.type | titlecase }} |
+  {{ challengeData.challenge.description }} 
+</p>
+<ul>
+  @for (participant of challengeData.participants; track participant.id) {
+    <li>
+      @if (participant.playerId === userId()) {
+        You
+      } @else {
+        {{ participant.player.name }}
+      }
+      @if (participant.status === 'FAILED') {
+        - Failed
+      } @else if (participant.status === 'COMPLETED') {
+        - Winner!
+      }
+    </li>
+  }
+</ul>

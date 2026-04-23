@@ -1,24 +1,29 @@
-<h1>Welcome {{ user().name }} | Player Code: {{ user().playerCode }}</h1>
+@let userDetails = user();
+<h1>Welcome {{ userDetails.name }} | Player Code: {{ userDetails.playerCode }}</h1>
 <section>
   <h2>Your Titles</h2>
-  <ng-container *appLoadSignal="titles(); let titles">
-    @for (title of titles; track title.id) {
-      <app-title [title]="title"> </app-title>
-    }
-  </ng-container>
+  <div style="display: flex; flex-wrap: wrap">
+    <ng-container *appLoadSignal="titles(); let titles">
+      @for (title of titles; track title.id) {
+        <app-title [title]="title"> </app-title>
+      }
+    </ng-container>
+  </div>
 </section>
 <section>
   <h2>Current Challenge</h2>
   <ng-container *appLoadSignal="currentChallenge(); let currentChallenge">
-    {{ currentChallenge }}
-    <!-- TODO -->
+    <app-challenge-card
+      [userId]="userDetails.id"
+      [challenge]="currentChallenge"
+    ></app-challenge-card>
   </ng-container>
 </section>
 <section>
   <h2>Completed Challenges</h2>
   <ng-container *appLoadSignal="challenges(); let challenges">
     @for (challenge of challenges; track challenge.id) {
-      <div>{{ challenge.id }}</div>
+      <app-challenge-card [userId]="userDetails.id" [challenge]="challenge"></app-challenge-card>
     } @empty {
       <p>No challenges completed yet.</p>
     }

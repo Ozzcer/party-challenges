@@ -4,12 +4,13 @@ import { map } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { ChallengeService } from '../../core/services/player/challenge.service';
 import { TitleService } from '../../core/services/player/title.service';
+import { ChallengeCardComponent } from '../../shared/components/challenge-card/challenge-card.component';
 import { TitleComponent } from '../../shared/components/title/title.component';
 import { LoadSignalDirective } from '../../shared/directives/load-signal.directive';
 
 @Component({
   selector: 'app-landing',
-  imports: [LoadSignalDirective, TitleComponent],
+  imports: [LoadSignalDirective, TitleComponent, ChallengeCardComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss',
 })

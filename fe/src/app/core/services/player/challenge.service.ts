@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { ProtectedChallengeInstance } from '@party/shared';
+import { ProtectedChallengeInstanceDetails } from '@party/shared';
 import { Observable } from 'rxjs';
 import { ApiResult, ApiService } from '../api.service';
 
@@ -9,11 +9,11 @@ import { ApiResult, ApiService } from '../api.service';
 export class ChallengeService {
   private readonly apiService = inject(ApiService);
 
-  public getChallenges(): Observable<ApiResult<ProtectedChallengeInstance[]>> {
-    return this.apiService.get<ProtectedChallengeInstance[]>('/player/challenges');
+  public getChallenges(): Observable<ApiResult<ProtectedChallengeInstanceDetails[]>> {
+    return this.apiService.get<ProtectedChallengeInstanceDetails[]>('/player/challenges');
   }
 
-  public getCurrentChallenge(): Observable<ApiResult<ProtectedChallengeInstance>> {
-    return this.apiService.get<ProtectedChallengeInstance>('/player/current-challenge');
+  public getCurrentChallenge(): Observable<ApiResult<ProtectedChallengeInstanceDetails>> {
+    return this.apiService.get<ProtectedChallengeInstanceDetails>('/player/current-challenge');
   }
 }
