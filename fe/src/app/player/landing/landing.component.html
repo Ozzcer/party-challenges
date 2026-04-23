@@ -1,8 +1,30 @@
-<ng-container *appLoadSignal="playerDetails(); let result">
-  @if (result.success) {
-    @let player = result.result;
-    <p>{{ player.name }}</p>
-  } @else {
-    <p>{{ result.error.message }}</p>
-  }
-</ng-container>
+<h1>Welcome {{ user().name }} | Player Code: {{ user().playerCode }}</h1>
+<section>
+  <h2>Your Titles</h2>
+  <ng-container *appLoadSignal="titles(); let titles">
+    @for (title of titles; track title.id) {
+      <app-title [title]="title"> </app-title>
+    } @empty {
+      <p>No titles completed yet.</p>
+      <!-- TODO create title component -->
+    }
+  </ng-container>
+</section>
+<section>
+  <h2>Current Challenge</h2>
+  <ng-container *appLoadSignal="currentChallenge(); let currentChallenge">
+    {{ currentChallenge }}
+    <!-- TODO -->
+  </ng-container>
+</section>
+<section>
+  <h2>Completed Challenges</h2>
+  <ng-container *appLoadSignal="challenges(); let challenges">
+    @for (challenge of challenges; track challenge.id) {
+      <div>{{ challenge.id }}</div>
+    } @empty {
+      <p>No challenges completed yet.</p>
+    }
+    <!-- TODO will prob need to expand type to bring challenge details as well -->
+  </ng-container>
+</section>
