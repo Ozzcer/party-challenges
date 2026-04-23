@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import {
+  Attribute,
   Challenge,
   ChallengeDetails,
   ChallengeInstance,
@@ -16,6 +17,10 @@ import { ApiResult, ApiService } from '../api.service';
 })
 export class AdminChallengeService {
   private readonly apiService = inject(ApiService);
+
+  public getAttributes(): Observable<ApiResult<Attribute[]>> {
+    return this.apiService.get<Attribute[]>('admin/attributes');
+  }
 
   public getChallenges(): Observable<ApiResult<Challenge[]>> {
     return this.apiService.get<Challenge[]>('admin/challenges');

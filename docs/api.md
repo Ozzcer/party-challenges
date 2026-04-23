@@ -44,6 +44,7 @@ Guards are applied at the route group level via `preHandler` hooks.
 
 | Method | Path | Body | Response | Purpose |
 |--------|------|------|----------|---------|
+| `GET` | `/admin/attributes` | — | `Attribute[]` | List all attributes |
 | `GET` | `/admin/challenges` | — | `Challenge[]` | List all challenges |
 | `POST` | `/admin/challenges` | `CreateChallenge` | `Challenge` | Create a challenge |
 | `GET` | `/admin/challenge-instances/active` | — | `WithRequired<ChallengeInstance, 'participants' \| 'challenge'>[]` | Active instances (≥1 OPEN participant) with nested data |

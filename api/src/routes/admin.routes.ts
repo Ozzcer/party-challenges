@@ -1,6 +1,7 @@
 import type { ResolveChallenge } from '@party/shared';
 import { FastifyInstance } from 'fastify';
 import { FromSchema } from 'json-schema-to-ts';
+import { getAttributesHandler } from '../controllers/attribute.controller';
 import {
   assignChallengeHandler,
   getActiveInstancesHandler,
@@ -31,6 +32,7 @@ import {
   createChallengeBodySchema,
   uncompletedChallengesBodySchema,
 } from '../schema/challenge.schema';
+import { attributeListResponseSchema } from '../schema/attribute.schema';
 import {
   playerByCodeBodySchema,
   playerCodeParamsSchema,
@@ -41,6 +43,10 @@ import { getCurrentGameEvent } from '../services/game-event.service';
 export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.register(async (adminFastify) => {
     adminFastify.addHook('preHandler', adminAuthGuard);
+
+    adminFastify.get('/attributes', {
+      schema: { response: { 200: attributeListResponseSchema } },
+    }, getAttributesHandler);
 
     adminFastify.get('/challenges', getChallenges);
 

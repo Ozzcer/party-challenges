@@ -26,7 +26,7 @@
     <ng-template #challengeErrorTemplate let-error>
       @if (error.statusCode === 404) {
         <p>No active challenge.</p>
-        <a routerLink="/admin/challenges" [queryParams]="{ playerCode: player.playerCode }"
+        <a routerLink="/admin/challenges" [queryParams]="{ playerCodes: player.playerCode }"
           >Assign Challenge</a
         >
       } @else {

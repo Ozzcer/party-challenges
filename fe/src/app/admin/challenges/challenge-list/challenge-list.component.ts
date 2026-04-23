@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -9,6 +9,7 @@ import {
   map,
   merge,
   Observable,
+  of,
   OperatorFunction,
   scan,
   shareReplay,
@@ -36,9 +37,13 @@ export class ChallengeListComponent {
   private readonly addQueryParamPlayer$: Observable<MutatePlayersAction> = inject(
     ActivatedRoute,
   ).queryParamMap.pipe(
-    map((queryParamMap) => queryParamMap.get('playerCode')),
-    filter((playerCode) => playerCode !== null),
-    this.playerCodeToAddAction(),
+    map((queryParamMap) =>
+      queryParamMap.getAll('playerCodes').flatMap((value) => value.split(',')),
+    ),
+    filter((playerCodes) => playerCodes.length > 0),
+    switchMap((playerCodes) =>
+      merge(...playerCodes.map((code) => of(code).pipe(this.playerCodeToAddAction()))),
+    ),
   );
 
   private readonly removePlayerIdSubject = new Subject<number>();
@@ -76,6 +81,7 @@ export class ChallengeListComponent {
   );
 
   public readonly players = toSignal(this.players$, { initialValue: [] as PlayerEntry[] });
+  public readonly playerCodes = computed(() => this.players().map((p) => p.playerCode));
   public readonly challenges = toSignal(this.challenges$);
 
   public readonly addPlayerForm = new FormGroup({

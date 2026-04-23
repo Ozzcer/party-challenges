@@ -40,7 +40,7 @@
         <p>Player has completed all challenges, create a new one below.</p>
       }
     </ng-container>
-    <a routerLink="/admin/challenges/create">Create a new challenge</a>
+    <a routerLink="/admin/challenges/create" [queryParams]="{playerCodes: playerCodes()}">Create a new challenge</a>
   } @else {
     <h2>Created challenges:</h2>
     @for (result of assignResultData; track result.challengeInstance.id) {

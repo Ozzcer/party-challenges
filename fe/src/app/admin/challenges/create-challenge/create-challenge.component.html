@@ -1,1 +1,47 @@
-<p>create-challenge works!</p>
+@let attributesResult = attributes();
+
+<form [formGroup]="form" (ngSubmit)="createChallenge()">
+  <label>
+    Description
+    <input type="text" formControlName="description" />
+  </label>
+
+  <label>
+    Attribute
+    @if (attributesResult === undefined) {
+      <select disabled>
+        <option>Loading...</option>
+      </select>
+    } @else if (attributesResult.success) {
+      <select formControlName="attributeId">
+        <option [value]="null" disabled>Select attribute</option>
+        @for (attribute of attributesResult.result; track attribute.id) {
+          <option [value]="attribute.id">{{ attribute.name }}</option>
+        }
+      </select>
+    } @else {
+      <p>Failed to load attributes: {{ attributesResult.error.message }}</p>
+    }
+  </label>
+
+  <label>
+    Type
+    <select formControlName="type">
+      <option value="" disabled>Select type</option>
+      @for (type of challengeTypes; track type) {
+        <option [value]="type">{{ type }}</option>
+      }
+    </select>
+  </label>
+
+  <label>
+    Score
+    <input type="number" formControlName="score" min="1" />
+  </label>
+
+  @if (submitError()) {
+    <p>{{ submitError() }}</p>
+  }
+
+  <button type="submit" [disabled]="form.invalid">Create Challenge</button>
+</form>
