@@ -1,0 +1,95 @@
+import type { FastifyReply, FastifyRequest } from 'fastify';
+import { FromSchema } from 'json-schema-to-ts';
+import { AppError } from '../lib/error-handler.lib';
+import {
+  playerCodeParamsSchema,
+  playerIdParamsSchema,
+  setNameBodySchema,
+} from '../schema/player.schema';
+import {
+  getPlayerById,
+  getPlayerByCode,
+  getPlayerChallenges,
+  getPlayerCurrentChallenge,
+  getPlayerDetails,
+  getUnusedPlayerCodes,
+  isPlayerEnrolled,
+  listPlayersInCurrentEvent,
+  setPlayerName,
+} from '../services/player.service';
+
+export async function listPlayersHandler(
+  _request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> {
+  const players = await listPlayersInCurrentEvent();
+  reply.send(players);
+}
+
+export async function getPlayerByIdHandler(
+  request: FastifyRequest<{ Params: FromSchema<typeof playerIdParamsSchema> }>,
+  reply: FastifyReply,
+): Promise<void> {
+  const player = await getPlayerById(request.params.id);
+  if (!player) throw new AppError('Player not found', 404);
+  reply.send(player);
+}
+
+export async function getPlayerByCodeHandler(
+  request: FastifyRequest<{ Params: FromSchema<typeof playerCodeParamsSchema> }>,
+  reply: FastifyReply,
+): Promise<void> {
+  const playerId = await getPlayerByCode(request.params.code);
+  if (playerId === null) throw new AppError('Player not found', 404);
+  reply.send(playerId);
+}
+
+export async function getUnusedPlayerCodesHandler(
+  _request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> {
+  const codes = await getUnusedPlayerCodes();
+  reply.send(codes);
+}
+
+export async function setNameHandler(
+  request: FastifyRequest<{ Body: FromSchema<typeof setNameBodySchema> }>,
+  reply: FastifyReply,
+): Promise<void> {
+  await setPlayerName(request.user.id, request.body.name);
+  reply.status(204).send();
+}
+
+export async function isEnrolledHandler(
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> {
+  const enrolled = await isPlayerEnrolled(request.user.id);
+  reply.send(enrolled);
+}
+
+export async function getPlayerDetailsHandler(
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> {
+  const player = await getPlayerDetails(request.user.id);
+  if (!player) throw new AppError('Player not found', 404);
+  reply.send(player);
+}
+
+export async function getPlayerChallengesHandler(
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> {
+  const challenges = await getPlayerChallenges(request.user.id);
+  reply.send(challenges);
+}
+
+export async function getPlayerCurrentChallengeHandler(
+  request: FastifyRequest,
+  reply: FastifyReply,
+): Promise<void> {
+  const challenge = await getPlayerCurrentChallenge(request.user.id);
+  if (!challenge) throw new AppError('No active challenge', 404);
+  reply.send(challenge);
+}
