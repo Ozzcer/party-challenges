@@ -27,8 +27,13 @@ export class AdminPlayerService {
     return this.apiService.get('/admin/player/' + id);
   }
 
-  public getPlayerIdByCode(code: string): Observable<ApiResult<number>> {
-    return this.apiService.get<number>('/admin/player-by-code/' + code);
+  public getPlayerIdByCode(
+    code: string,
+    enrolledInCurrentEvent: boolean = false,
+  ): Observable<ApiResult<number>> {
+    return this.apiService.post<number>('/admin/player-by-code/' + code, {
+      enrolledInCurrentEvent,
+    });
   }
 
   public getCurrentChallengeForPlayer(

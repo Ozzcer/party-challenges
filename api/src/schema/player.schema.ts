@@ -21,3 +21,11 @@ export const playerCodeParamsSchema = {
   },
   required: ['code'],
 } as const;
+
+export const playerByCodeBodySchema = {
+  type: 'object',
+  properties: {
+    enrolledInCurrentEvent: { type: 'boolean', default: false },
+  },
+  required: [],
+} as const;

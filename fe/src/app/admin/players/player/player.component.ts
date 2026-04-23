@@ -18,6 +18,7 @@ export class PlayerComponent {
     map((params) => Number(params.get('id'))),
   );
 
+  // TODO handle not enrolled
   public readonly player = toSignal(
     this.id$.pipe(switchMap((id) => this.adminPlayerService.getPlayer(id))),
   );

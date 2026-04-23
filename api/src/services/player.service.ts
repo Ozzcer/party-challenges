@@ -56,9 +56,15 @@ export async function getPlayerById(id: number): Promise<PlayerDetails | null> {
   });
 }
 
-export async function getPlayerByCode(code: string): Promise<number | null> {
+export async function getPlayerByCode(
+  code: string,
+  enrolledInCurrentEvent: boolean,
+): Promise<number | null> {
   const player = await prisma.player.findUnique({
-    where: { playerCode: code },
+    where: {
+      playerCode: code,
+      ...(enrolledInCurrentEvent && { events: { some: { event: { current: true } } } }),
+    },
     select: { id: true },
   });
   return player?.id ?? null;

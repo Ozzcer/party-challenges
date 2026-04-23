@@ -3,6 +3,7 @@ import { FromSchema } from 'json-schema-to-ts';
 import { AppError } from '../lib/error-handler.lib';
 import { setToken } from '../lib/set-token.lib';
 import {
+  playerByCodeBodySchema,
   playerCodeParamsSchema,
   playerIdParamsSchema,
   setNameBodySchema,
@@ -38,10 +39,13 @@ export async function getPlayerByIdHandler(
 }
 
 export async function getPlayerByCodeHandler(
-  request: FastifyRequest<{ Params: FromSchema<typeof playerCodeParamsSchema> }>,
+  request: FastifyRequest<{
+    Params: FromSchema<typeof playerCodeParamsSchema>;
+    Body: FromSchema<typeof playerByCodeBodySchema>;
+  }>,
   reply: FastifyReply,
 ): Promise<void> {
-  const playerId = await getPlayerByCode(request.params.code);
+  const playerId = await getPlayerByCode(request.params.code, request.body.enrolledInCurrentEvent ?? false);
   if (playerId === null) throw new AppError('Player not found', 404);
   reply.send(playerId);
 }

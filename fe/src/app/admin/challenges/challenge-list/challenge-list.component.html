@@ -1,11 +1,31 @@
-<h1>Challenges</h1>
 <section>
+  <h1>Players</h1>
+  <form [formGroup]="addPlayerForm" (ngSubmit)="addPlayer()">
+    <label>
+      Player Code
+      <input type="text" formControlName="playerCode" />
+    </label>
+    <button type="submit">Add</button>
+    <span>{{ result() }}</span>
+  </form>
+  @let playerList = players();
+  @for (player of playerList; track player.id) {
+    <button (click)="removePlayer(player.id)">
+      {{ player.playerCode }}
+    </button>
+  }
+</section>
+<section>
+  <h1>Challenges</h1>
   <ng-container *appLoadSignal="challenges(); let challenges">
     @for (challenge of challenges; track challenge.id) {
-      <a style="display: block;">
-        <p>{{challenge.attribute.name}}</p>
-        <p>{{challenge.description}}</p>
-      </a>
+      <div style="background-color: gainsboro; margin: 5px">
+        <p>{{ challenge.attribute.name }}</p>
+        <p>{{ challenge.description }}</p>
+        <p>{{ challenge.type | titlecase }}</p>
+        <p>{{ challenge.score }}</p>
+        <button>Assign challenge</button>
+      </div>
     }
   </ng-container>
 </section>

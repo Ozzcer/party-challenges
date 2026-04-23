@@ -20,7 +20,7 @@ import {
   resolveChallengeBodySchema,
 } from '../schema/challenge-instance.schema';
 import { createChallengeBodySchema, uncompletedChallengesBodySchema } from '../schema/challenge.schema';
-import { playerCodeParamsSchema, playerIdParamsSchema } from '../schema/player.schema';
+import { playerByCodeBodySchema, playerCodeParamsSchema, playerIdParamsSchema } from '../schema/player.schema';
 import { getCurrentGameEvent } from '../services/game-event.service';
 import type { ResolveChallenge } from '@party/shared';
 
@@ -72,9 +72,12 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
       getPlayerByIdHandler,
     );
 
-    adminFastify.get<{ Params: FromSchema<typeof playerCodeParamsSchema> }>(
+    adminFastify.post<{
+      Params: FromSchema<typeof playerCodeParamsSchema>;
+      Body: FromSchema<typeof playerByCodeBodySchema>;
+    }>(
       '/player-by-code/:code',
-      { schema: { params: playerCodeParamsSchema } },
+      { schema: { params: playerCodeParamsSchema, body: playerByCodeBodySchema } },
       getPlayerByCodeHandler,
     );
 
