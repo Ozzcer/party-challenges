@@ -3,6 +3,7 @@ import {
   Challenge,
   ChallengeDetails,
   ChallengeInstance,
+  ChallengeInstanceCreated,
   CreateChallenge,
   ProtectedChallengeInstanceDetails,
   ResolveChallenge,
@@ -48,5 +49,12 @@ export class AdminChallengeService {
       `/admin/challenge-instances/${id}/resolve`,
       resolveChallenge,
     );
+  }
+
+  public assignChallenge(
+    challengeId: number,
+    playerIds: number[],
+  ): Observable<ApiResult<ChallengeInstanceCreated[]>> {
+    return this.apiService.post(`/admin/challenges/${challengeId}/assign`, { playerIds });
   }
 }

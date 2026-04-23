@@ -1,11 +1,17 @@
+import type { ResolveChallenge } from '@party/shared';
 import { FastifyInstance } from 'fastify';
 import { FromSchema } from 'json-schema-to-ts';
 import {
+  assignChallengeHandler,
   getActiveInstancesHandler,
   getInstanceHandler,
   resolveInstanceHandler,
 } from '../controllers/challenge-instance.controller';
-import { getChallenges, getUncompletedChallengesHandler, postChallenge } from '../controllers/challenge.controller';
+import {
+  getChallenges,
+  getUncompletedChallengesHandler,
+  postChallenge,
+} from '../controllers/challenge.controller';
 import {
   getEarnedTitlesByIdHandler,
   getPlayerByCodeHandler,
@@ -19,10 +25,18 @@ import {
   instanceIdParamsSchema,
   resolveChallengeBodySchema,
 } from '../schema/challenge-instance.schema';
-import { createChallengeBodySchema, uncompletedChallengesBodySchema } from '../schema/challenge.schema';
-import { playerByCodeBodySchema, playerCodeParamsSchema, playerIdParamsSchema } from '../schema/player.schema';
+import {
+  assignChallengeBodySchema,
+  challengeIdParamsSchema,
+  createChallengeBodySchema,
+  uncompletedChallengesBodySchema,
+} from '../schema/challenge.schema';
+import {
+  playerByCodeBodySchema,
+  playerCodeParamsSchema,
+  playerIdParamsSchema,
+} from '../schema/player.schema';
 import { getCurrentGameEvent } from '../services/game-event.service';
-import type { ResolveChallenge } from '@party/shared';
 
 export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
   fastify.register(async (adminFastify) => {
@@ -30,7 +44,9 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
 
     adminFastify.get('/challenges', getChallenges);
 
-    adminFastify.post<{ Body: FromSchema<typeof uncompletedChallengesBodySchema> }>(
+    adminFastify.post<{
+      Body: FromSchema<typeof uncompletedChallengesBodySchema>;
+    }>(
       '/challenges/uncompleted',
       { schema: { body: uncompletedChallengesBodySchema } },
       getUncompletedChallengesHandler,
@@ -40,6 +56,15 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
       '/challenges',
       { schema: { body: createChallengeBodySchema } },
       postChallenge,
+    );
+
+    adminFastify.post<{
+      Params: FromSchema<typeof challengeIdParamsSchema>;
+      Body: FromSchema<typeof assignChallengeBodySchema>;
+    }>(
+      '/challenges/:challengeId/assign',
+      { schema: { params: challengeIdParamsSchema, body: assignChallengeBodySchema } },
+      assignChallengeHandler,
     );
 
     adminFastify.get('/challenge-instances/active', getActiveInstancesHandler);
@@ -55,7 +80,12 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
       Body: ResolveChallenge;
     }>(
       '/challenge-instances/:id/resolve',
-      { schema: { params: instanceIdParamsSchema, body: resolveChallengeBodySchema } },
+      {
+        schema: {
+          params: instanceIdParamsSchema,
+          body: resolveChallengeBodySchema,
+        },
+      },
       resolveInstanceHandler,
     );
 
@@ -77,7 +107,12 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
       Body: FromSchema<typeof playerByCodeBodySchema>;
     }>(
       '/player-by-code/:code',
-      { schema: { params: playerCodeParamsSchema, body: playerByCodeBodySchema } },
+      {
+        schema: {
+          params: playerCodeParamsSchema,
+          body: playerByCodeBodySchema,
+        },
+      },
       getPlayerByCodeHandler,
     );
 

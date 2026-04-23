@@ -1,3 +1,19 @@
+export const challengeIdParamsSchema = {
+  type: 'object',
+  properties: {
+    challengeId: { type: 'number' },
+  },
+  required: ['challengeId'],
+} as const;
+
+export const assignChallengeBodySchema = {
+  type: 'object',
+  properties: {
+    playerIds: { type: 'array', items: { type: 'number' } },
+  },
+  required: ['playerIds'],
+} as const;
+
 export const uncompletedChallengesBodySchema = {
   type: 'object',
   properties: {

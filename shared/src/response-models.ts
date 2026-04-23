@@ -1,5 +1,6 @@
 import {
   Challenge,
+  ChallengeInstance,
   ChallengeParticipant,
   GameEvent,
   Player,
@@ -42,3 +43,8 @@ export interface PlayerDetails extends Omit<
 }
 
 export type ChallengeDetails = WithRequired<Challenge, 'attribute'>;
+
+export interface ChallengeInstanceCreated {
+  challengeInstance: ChallengeInstance;
+  players: Player[];
+}

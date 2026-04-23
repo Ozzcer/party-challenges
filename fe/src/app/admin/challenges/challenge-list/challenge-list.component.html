@@ -1,3 +1,4 @@
+@let playerList = players();
 <section>
   <h1>Players</h1>
   <form [formGroup]="addPlayerForm" (ngSubmit)="addPlayer()">
@@ -6,9 +7,8 @@
       <input type="text" formControlName="playerCode" />
     </label>
     <button type="submit">Add</button>
-    <span>{{ result() }}</span>
+    <span>{{ addResult() }}</span>
   </form>
-  @let playerList = players();
   @for (player of playerList; track player.id) {
     <button (click)="removePlayer(player.id)">
       {{ player.playerCode }}
@@ -16,16 +16,32 @@
   }
 </section>
 <section>
-  <h1>Challenges</h1>
-  <ng-container *appLoadSignal="challenges(); let challenges">
-    @for (challenge of challenges; track challenge.id) {
-      <div style="background-color: gainsboro; margin: 5px">
-        <p>{{ challenge.attribute.name }}</p>
-        <p>{{ challenge.description }}</p>
-        <p>{{ challenge.type | titlecase }}</p>
-        <p>{{ challenge.score }}</p>
-        <button>Assign challenge</button>
-      </div>
+  @let assignErrorText = assignError();
+  @let assignResultData = assignResult();
+  @if (assignResultData === null) {
+    <h1>Challenges</h1>
+    <p>{{ assignErrorText }}</p>
+    <ng-container *appLoadSignal="challenges(); let challenges">
+      @for (challenge of challenges; track challenge.id) {
+        <div style="background-color: gainsboro; margin: 5px">
+          <p>{{ challenge.attribute.name }}</p>
+          <p>{{ challenge.description }}</p>
+          <p>{{ challenge.type | titlecase }}</p>
+          <p>{{ challenge.score }}</p>
+          <button (click)="assignChallenge(challenge.id, playerList)">Assign challenge</button>
+        </div>
+      }
+    </ng-container>
+  } @else {
+    <h2>Created challenges:</h2>
+    @for (result of assignResultData; track result.challengeInstance.id) {
+      <a routerLink="/admin/challenge-instances/{{ result.challengeInstance.id }}/resolve">
+        <span>Click to go to challenge resolution for this instance</span>
+        @for (player of result.players; track player.id) {
+          <p>{{ player.name }}</p>
+          <p>{{ player.playerCode }}</p>
+        }
+      </a>
     }
-  </ng-container>
+  }
 </section>

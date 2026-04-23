@@ -2,7 +2,8 @@ import { TitleCasePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ChallengeInstanceCreated } from '@party/shared';
 import {
   filter,
   map,
@@ -21,7 +22,7 @@ import { LoadSignalDirective } from '../../../shared/directives/load-signal.dire
 
 @Component({
   selector: 'app-challenge-list',
-  imports: [LoadSignalDirective, ReactiveFormsModule, TitleCasePipe],
+  imports: [LoadSignalDirective, ReactiveFormsModule, TitleCasePipe, RouterLink],
   templateUrl: './challenge-list.component.html',
   styleUrl: './challenge-list.component.scss',
 })
@@ -76,7 +77,9 @@ export class ChallengeListComponent {
   public readonly addPlayerForm = new FormGroup({
     playerCode: new FormControl('', { nonNullable: true }),
   });
-  public readonly result = signal('');
+  public readonly addResult = signal<string>('');
+  public readonly assignResult = signal<ChallengeInstanceCreated[] | null>(null);
+  public readonly assignError = signal<string>('');
 
   private playerCodeToAddAction(): OperatorFunction<string, MutatePlayersAction> {
     return (source$) =>
@@ -91,8 +94,8 @@ export class ChallengeListComponent {
         ),
         tap((player) =>
           player
-            ? this.result.set(`Player ${player.playerCode} added`)
-            : this.result.set('Player not found'),
+            ? this.addResult.set(`Player ${player.playerCode} added`)
+            : this.addResult.set('Player not found'),
         ),
         filter((player) => player !== null),
         map((player) => ({ type: 'add' as const, player })),
@@ -107,11 +110,20 @@ export class ChallengeListComponent {
   }
 
   public removePlayer(playerId: number): void {
-    this.result.set('');
+    this.addResult.set('');
     this.removePlayerIdSubject.next(playerId);
   }
 
-  public assignChallenge(playerIds: number[]): void {}
+  public assignChallenge(challengeId: number, players: PlayerEntry[]): void {
+    this.adminChallengeService
+      .assignChallenge(
+        challengeId,
+        players.map((player) => player.id),
+      )
+      .subscribe((res) =>
+        res.success ? this.assignResult.set(res.result) : this.assignError.set(res.error.message),
+      );
+  }
 }
 
 interface PlayerEntry {

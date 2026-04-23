@@ -6,6 +6,10 @@ import type {
 import { prisma } from '../lib/prisma.lib';
 import { getCurrentGameEvent } from './game-event.service';
 
+export async function getChallengeById(id: number): Promise<Challenge | null> {
+  return await prisma.challenge.findUnique({ where: { id } });
+}
+
 export async function listChallenges(): Promise<ChallengeDetails[]> {
   return await prisma.challenge.findMany({
     include: {

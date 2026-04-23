@@ -45,11 +45,14 @@ export const ADMIN_ROUTES: Routes = [
                 path: ':id',
                 children: [
                   { path: 'assign', component: AssignChallengeComponent },
-                  { path: 'resolve', component: ResolveChallengeComponent },
                   { path: '**', redirectTo: '/admin/challenges' },
                 ],
               },
             ],
+          },
+          {
+            path: 'challenge-instances/:id/resolve',
+            component: ResolveChallengeComponent,
           },
         ],
       },

@@ -63,7 +63,9 @@ export async function getPlayerByCode(
   const player = await prisma.player.findUnique({
     where: {
       playerCode: code,
-      ...(enrolledInCurrentEvent && { events: { some: { event: { current: true } } } }),
+      ...(enrolledInCurrentEvent && {
+        events: { some: { event: { current: true } } },
+      }),
     },
     select: { id: true },
   });
@@ -168,4 +170,30 @@ export async function getPlayerCurrentChallenge(
 
   if (!participant) return null;
   return participant.instance;
+}
+
+export async function getPlayerCodeById(id: number): Promise<string | null> {
+  const player = await prisma.player.findUnique({
+    where: {
+      id,
+    },
+    select: { playerCode: true },
+  });
+  return player?.playerCode || null;
+}
+
+export async function getPlayersIncludeActiveChallenge(
+  playerIds: number[],
+  eventId: number,
+) {
+  return await prisma.player.findMany({
+    where: {
+      id: { in: playerIds },
+    },
+    include: {
+      challengeParticipation: {
+        where: { status: 'OPEN' },
+      },
+    },
+  });
 }

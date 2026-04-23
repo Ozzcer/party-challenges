@@ -1,4 +1,11 @@
-import type { ChallengeInstance, ResolveChallenge, WithRequired } from '@party/shared';
+import type {
+  Challenge,
+  ChallengeInstance,
+  ChallengeInstanceCreated,
+  Player,
+  ResolveChallenge,
+  WithRequired,
+} from '@party/shared';
 import { AppError } from '../lib/error-handler.lib';
 import { prisma } from '../lib/prisma.lib';
 import { getCurrentGameEvent } from './game-event.service';
@@ -22,18 +29,27 @@ export async function getActiveInstances(): Promise<
     include: instanceInclude,
   });
 
-  return instances as WithRequired<ChallengeInstance, 'participants' | 'challenge'>[];
+  return instances as WithRequired<
+    ChallengeInstance,
+    'participants' | 'challenge'
+  >[];
 }
 
 export async function getInstanceById(
   id: number,
-): Promise<WithRequired<ChallengeInstance, 'participants' | 'challenge'> | null> {
+): Promise<WithRequired<
+  ChallengeInstance,
+  'participants' | 'challenge'
+> | null> {
   const instance = await prisma.challengeInstance.findUnique({
     where: { id },
     include: instanceInclude,
   });
 
-  return instance as WithRequired<ChallengeInstance, 'participants' | 'challenge'> | null;
+  return instance as WithRequired<
+    ChallengeInstance,
+    'participants' | 'challenge'
+  > | null;
 }
 
 export async function resolveInstance(
@@ -47,7 +63,9 @@ export async function resolveInstance(
 
   if (!instance) throw new AppError('Challenge instance not found', 404);
 
-  const openParticipants = instance.participants.filter((p) => p.status === 'OPEN');
+  const openParticipants = instance.participants.filter(
+    (p) => p.status === 'OPEN',
+  );
 
   if (data.status === 'FAILED') {
     await prisma.challengeParticipant.updateMany({
@@ -56,7 +74,8 @@ export async function resolveInstance(
     });
   } else {
     const winnerId = data.winningPlayer ?? openParticipants[0]?.playerId;
-    if (winnerId === undefined) throw new AppError('No open participants to resolve', 400);
+    if (winnerId === undefined)
+      throw new AppError('No open participants to resolve', 400);
 
     await prisma.challengeParticipant.updateMany({
       where: { instanceId: id, status: 'OPEN', NOT: { playerId: winnerId } },
@@ -85,5 +104,39 @@ export async function resolveInstance(
     });
   }
 
-  return (await prisma.challengeInstance.findUnique({ where: { id } })) as ChallengeInstance;
+  return (await prisma.challengeInstance.findUnique({
+    where: { id },
+  })) as ChallengeInstance;
+}
+
+async function createInstance(
+  challengeId: number,
+  players: Player[],
+  eventId: number,
+): Promise<ChallengeInstanceCreated> {
+  const instance = await prisma.challengeInstance.create({
+    data: {
+      challengeId,
+      eventId,
+      participants: {
+        create: players.map((player) => ({ playerId: player.id })),
+      },
+    },
+  });
+
+  return { challengeInstance: instance, players };
+}
+
+export async function assignChallenge(
+  challenge: Challenge,
+  players: Player[],
+  eventId: number,
+): Promise<ChallengeInstanceCreated[]> {
+  if (challenge.type === 'SOLO') {
+    return Promise.all(
+      players.map((player) => createInstance(challenge.id, [player], eventId)),
+    );
+  }
+
+  return [await createInstance(challenge.id, players, eventId)];
 }
