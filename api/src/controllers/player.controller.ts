@@ -18,6 +18,7 @@ import {
   listPlayersInCurrentEvent,
   setPlayerName,
 } from '../services/player.service';
+import { getEarnedTitles } from '../services/title.service';
 
 export async function listPlayersHandler(
   _request: FastifyRequest,
@@ -99,4 +100,21 @@ export async function getPlayerCurrentChallengeHandler(
   const challenge = await getPlayerCurrentChallenge(request.user.id);
   if (!challenge) throw new AppError('No active challenge', 404);
   reply.send(challenge);
+}
+
+export async function getPlayerCurrentChallengeByIdHandler(
+  request: FastifyRequest<{ Params: FromSchema<typeof playerIdParamsSchema> }>,
+  reply: FastifyReply,
+): Promise<void> {
+  const challenge = await getPlayerCurrentChallenge(request.params.id);
+  if (!challenge) throw new AppError('No active challenge', 404);
+  reply.send(challenge);
+}
+
+export async function getEarnedTitlesByIdHandler(
+  request: FastifyRequest<{ Params: FromSchema<typeof playerIdParamsSchema> }>,
+  reply: FastifyReply,
+): Promise<void> {
+  const titles = await getEarnedTitles(request.params.id);
+  reply.send(titles);
 }

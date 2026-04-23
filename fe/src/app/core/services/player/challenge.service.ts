@@ -10,10 +10,10 @@ export class ChallengeService {
   private readonly apiService = inject(ApiService);
 
   public getChallenges(): Observable<ApiResult<ProtectedChallengeInstance[]>> {
-    return this.apiService.get<ProtectedChallengeInstance[]>('player/challenges');
+    return this.apiService.get<ProtectedChallengeInstance[]>('/player/challenges');
   }
 
   public getCurrentChallenge(): Observable<ApiResult<ProtectedChallengeInstance>> {
-    return this.apiService.get<ProtectedChallengeInstance>('player/current-challenge');
+    return this.apiService.get<ProtectedChallengeInstance>('/player/current-challenge');
   }
 }

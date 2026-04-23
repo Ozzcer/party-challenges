@@ -7,8 +7,10 @@ import {
 } from '../controllers/challenge-instance.controller';
 import { getChallenges, postChallenge } from '../controllers/challenge.controller';
 import {
+  getEarnedTitlesByIdHandler,
   getPlayerByCodeHandler,
   getPlayerByIdHandler,
+  getPlayerCurrentChallengeByIdHandler,
   getUnusedPlayerCodesHandler,
   listPlayersHandler,
 } from '../controllers/player.controller';
@@ -71,5 +73,17 @@ export async function adminRoutes(fastify: FastifyInstance): Promise<void> {
     );
 
     adminFastify.get('/unused-player-codes', getUnusedPlayerCodesHandler);
+
+    adminFastify.get<{ Params: FromSchema<typeof playerIdParamsSchema> }>(
+      '/players/:id/challenge',
+      { schema: { params: playerIdParamsSchema } },
+      getPlayerCurrentChallengeByIdHandler,
+    );
+
+    adminFastify.get<{ Params: FromSchema<typeof playerIdParamsSchema> }>(
+      '/players/:id/titles',
+      { schema: { params: playerIdParamsSchema } },
+      getEarnedTitlesByIdHandler,
+    );
   });
 }

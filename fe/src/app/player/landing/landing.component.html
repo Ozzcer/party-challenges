@@ -4,9 +4,6 @@
   <ng-container *appLoadSignal="titles(); let titles">
     @for (title of titles; track title.id) {
       <app-title [title]="title"> </app-title>
-    } @empty {
-      <p>No titles completed yet.</p>
-      <!-- TODO create title component -->
     }
   </ng-container>
 </section>

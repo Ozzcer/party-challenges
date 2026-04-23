@@ -1,2 +1,33 @@
-<p>player works!</p>
-{{player()}}
+<ng-container *appLoadSignal="player(); let player">
+  <h1>Player: {{ player.name }} | Player Code: {{ player.playerCode }}</h1>
+
+  <section>
+    <h2>Current Challenge</h2>
+    <ng-container
+      *appLoadSignal="currentChallenge(); let currentChallenge; errorTemplate: challengeErrorTemplate"
+    >
+      {{ currentChallenge.challengeId }}
+    </ng-container>
+
+    <ng-template #challengeErrorTemplate let-error>
+      @if (error.statusCode === 404) {
+        <p>No active challenge.</p>
+        <a routerLink="/admin/challenges" [queryParams]="{ playerId: player.id }">Assign Challenge</a>
+      } @else {
+        <p>{{ error.message }}</p>
+      }
+    </ng-template>
+  </section>
+
+  <section>
+    <h2>Player Titles</h2>
+    <ng-container *appLoadSignal="titles(); let titles">
+      @for (title of titles; track title.id) {
+        <app-title [title]="title"> </app-title>
+      }
+    </ng-container>
+  </section>
+</ng-container>
+
+<!-- TODO current stats-->
+<!-- TODO completed challenges -->

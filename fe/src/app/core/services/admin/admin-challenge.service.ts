@@ -2,9 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import {
   Challenge,
   ChallengeInstance,
+  ChallengeInstanceDetails,
   CreateChallenge,
   ResolveChallenge,
-  WithRequired,
 } from '@party/shared';
 import { Observable } from 'rxjs';
 import { ApiResult, ApiService } from '../api.service';
@@ -23,15 +23,11 @@ export class AdminChallengeService {
     return this.apiService.post<Challenge>('/admin/challenges', createChallenge);
   }
 
-  public getActiveChallengeInstances(): Observable<
-    ApiResult<WithRequired<ChallengeInstance, 'participants' | 'challenge'>[]>
-  > {
+  public getActiveChallengeInstances(): Observable<ApiResult<ChallengeInstanceDetails[]>> {
     return this.apiService.get('/admin/challenge-instances/active');
   }
 
-  public getChallengeInstance(
-    id: number,
-  ): Observable<ApiResult<WithRequired<ChallengeInstance, 'participants' | 'challenge'>>> {
+  public getChallengeInstance(id: number): Observable<ApiResult<ChallengeInstanceDetails>> {
     return this.apiService.get('/admin/challenge-instances/' + id);
   }
 
