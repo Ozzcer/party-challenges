@@ -28,14 +28,19 @@
           <p>{{ challenge.description }}</p>
           <p>{{ challenge.type | titlecase }}</p>
           <p>{{ challenge.score }}</p>
-          @if (playerList.length > 0) {
+          @if(challenge.type === 'ADVERSARIAL' && playerList.length < 2){
+            <p>At least 2 players required for Adverserial challenges, add another above</p>
+          }@else if (playerList.length > 0) {
             <button (click)="assignChallenge(challenge.id, playerList)">Assign challenge</button>
           } @else {
             <p>Add a player above to assign a challenge</p>
           }
         </div>
+      } @empty {
+        <p>Player has completed all challenges, create a new one below.</p>
       }
     </ng-container>
+    <a routerLink="/admin/challenges/create">Create a new challenge</a>
   } @else {
     <h2>Created challenges:</h2>
     @for (result of assignResultData; track result.challengeInstance.id) {

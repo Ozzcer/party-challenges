@@ -19,6 +19,7 @@ import {
 } from 'rxjs';
 import { AdminChallengeService } from '../../../core/services/admin/admin-challenge.service';
 import { AdminPlayerService } from '../../../core/services/admin/admin-player.service';
+import { DialogService } from '../../../core/services/dialog.service';
 import { LoadSignalDirective } from '../../../shared/directives/load-signal.directive';
 
 @Component({
@@ -30,6 +31,7 @@ import { LoadSignalDirective } from '../../../shared/directives/load-signal.dire
 export class ChallengeListComponent {
   private readonly adminChallengeService = inject(AdminChallengeService);
   private readonly adminPlayerService = inject(AdminPlayerService);
+  private readonly dialogService = inject(DialogService);
 
   private readonly addQueryParamPlayer$: Observable<MutatePlayersAction> = inject(
     ActivatedRoute,
@@ -117,6 +119,10 @@ export class ChallengeListComponent {
   }
 
   public assignChallenge(challengeId: number, players: PlayerEntry[]): void {
+    const confirm = this.dialogService.showConfirmDialog(
+      `Are you sure you wish to assign this challenge to: ${players.map((player) => player.playerCode).toString()}`,
+    );
+    if (!confirm) return;
     this.adminChallengeService
       .assignChallenge(
         challengeId,

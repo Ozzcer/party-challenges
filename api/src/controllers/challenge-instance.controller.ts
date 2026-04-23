@@ -59,6 +59,13 @@ export async function assignChallengeHandler(
   const challenge = await getChallengeById(request.params.challengeId);
   if (!challenge) throw new AppError('Challenge not found', 400);
 
+  if (challenge.type === 'ADVERSARIAL' && request.body.playerIds.length < 2) {
+    throw new AppError(
+      'Cannot start an adverserial challenge with one player',
+      400,
+    );
+  }
+
   const players = await getPlayersIncludeActiveChallenge(
     request.body.playerIds,
     event.id,
@@ -106,6 +113,7 @@ async function resolveInstanceAsFailed(
     return participant.id;
   });
 
+
   await setParticipantsStatus(ids, 'FAILED');
 }
 
@@ -114,24 +122,24 @@ async function resolveInstanceAsCompleted(
   winnerId: number,
 ): Promise<void> {
   const losingParticipantIds: number[] = [];
-  let winnerFound = false;
+  let winnerParticipantId: number | null = null;
   for (const participant of instance.participants) {
     if (participant.status !== 'OPEN') {
       throw new AppError('Challenge already resolved', 400);
     }
     if (participant.playerId === winnerId) {
-      winnerFound = true;
+      winnerParticipantId = participant.id;
     } else {
-      losingParticipantIds.push(participant.playerId);
+      losingParticipantIds.push(participant.id);
     }
   }
 
-  if (!winnerFound) {
+  if (!winnerParticipantId) {
     throw new AppError('Selected winner is not in challenge', 400);
   }
 
   await setParticipantsStatus(losingParticipantIds, 'FAILED');
-  await setParticipantsStatus([winnerId], 'COMPLETED');
+  await setParticipantsStatus([winnerParticipantId], 'COMPLETED');
   await incrementPlayerAttributeScore(
     winnerId,
     instance.eventId,
