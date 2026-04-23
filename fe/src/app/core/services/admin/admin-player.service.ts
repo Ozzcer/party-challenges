@@ -1,5 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import type { ChallengeInstanceDetails, Player, ProtectedTitle } from '@party/shared';
+import type {
+  Player,
+  PlayerDetails,
+  ProtectedChallengeInstanceDetails,
+  ProtectedTitle,
+} from '@party/shared';
 import { map, Observable } from 'rxjs';
 import { mapEmptyTitles } from '../../lib/map-empty-titles.lib';
 import { ApiResult, ApiService } from '../api.service';
@@ -18,15 +23,17 @@ export class AdminPlayerService {
     return this.apiService.get<Player[]>('/admin/players');
   }
 
-  public getPlayer(id: number): Observable<ApiResult<Player>> {
-    return this.apiService.get<Player>('/admin/player/' + id);
+  public getPlayer(id: number): Observable<ApiResult<PlayerDetails>> {
+    return this.apiService.get('/admin/player/' + id);
   }
 
   public getPlayerIdByCode(code: string): Observable<ApiResult<number>> {
     return this.apiService.get<number>('/admin/player-by-code/' + code);
   }
 
-  public getCurrentChallengeForPlayer(id: number): Observable<ApiResult<ChallengeInstanceDetails>> {
+  public getCurrentChallengeForPlayer(
+    id: number,
+  ): Observable<ApiResult<ProtectedChallengeInstanceDetails>> {
     return this.apiService.get(`/admin/players/${id}/challenge`);
   }
 

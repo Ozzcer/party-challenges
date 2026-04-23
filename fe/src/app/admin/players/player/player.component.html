@@ -2,6 +2,13 @@
   <h1>Player: {{ player.name }} | Player Code: {{ player.playerCode }}</h1>
 
   <section>
+    <h2>Player Stats</h2>
+    @for (score of player.playerAttributeScores; track score.id) {
+      <p>{{score.attribute.name}}: {{score.score}}</p>
+    }
+  </section>
+
+  <section>
     <h2>Current Challenge</h2>
     <ng-container
       *appLoadSignal="currentChallenge(); let currentChallenge; errorTemplate: challengeErrorTemplate"
@@ -27,7 +34,7 @@
       }
     </ng-container>
   </section>
+
 </ng-container>
 
-<!-- TODO current stats-->
 <!-- TODO completed challenges -->

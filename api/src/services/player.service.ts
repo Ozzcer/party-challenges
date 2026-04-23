@@ -1,6 +1,7 @@
 import type {
-  ChallengeInstanceDetails,
   Player,
+  PlayerDetails,
+  ProtectedChallengeInstanceDetails,
   ProtectedPlayer,
 } from '@party/shared';
 import { AppError } from '../lib/error-handler.lib';
@@ -19,8 +20,40 @@ export async function listPlayersInCurrentEvent(): Promise<Player[]> {
   return eventPlayers.map((ep) => ep.player);
 }
 
-export async function getPlayerById(id: number): Promise<Player | null> {
-  return await prisma.player.findUnique({ where: { id } });
+export async function getPlayerById(id: number): Promise<PlayerDetails | null> {
+  const event = await getCurrentGameEvent();
+
+  return await prisma.player.findUnique({
+    where: { id },
+    include: {
+      challengeParticipation: {
+        where: event ? { instance: { eventId: event.id } } : undefined,
+        include: {
+          instance: {
+            include: {
+              challenge: true,
+              participants: {
+                include: {
+                  player: {
+                    select: {
+                      id: true,
+                      name: true,
+                      createdAt: true,
+                      updatedAt: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      playerAttributeScores: {
+        where: event ? { eventId: event.id } : undefined,
+        include: { attribute: true },
+      },
+    },
+  });
 }
 
 export async function getPlayerByCode(code: string): Promise<number | null> {
@@ -68,7 +101,7 @@ export async function getPlayerDetails(
 
 export async function getPlayerChallenges(
   playerId: number,
-): Promise<ChallengeInstanceDetails[]> {
+): Promise<ProtectedChallengeInstanceDetails[]> {
   const event = await getCurrentGameEvent();
   if (!event) throw new AppError('No current game event', 400);
 
@@ -100,7 +133,7 @@ export async function getPlayerChallenges(
 
 export async function getPlayerCurrentChallenge(
   playerId: number,
-): Promise<ChallengeInstanceDetails | null> {
+): Promise<ProtectedChallengeInstanceDetails | null> {
   const event = await getCurrentGameEvent();
   if (!event) return null;
 

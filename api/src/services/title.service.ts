@@ -17,8 +17,13 @@ export async function getEarnedTitles(playerId: number): Promise<ProtectedTitle[
     if (attributeIds.length === 0) continue;
 
     if (title.titleType === 'SINGLE_REQUIREMENT') {
+      const threshold = title.requirements[0].threshold;
       const topScore = await prisma.playerAttributeScore.findFirst({
-        where: { attributeId: attributeIds[0], eventId: event.id },
+        where: {
+          attributeId: attributeIds[0],
+          eventId: event.id,
+          score: { gte: threshold },
+        },
         orderBy: { score: 'desc' },
       });
 
@@ -26,29 +31,28 @@ export async function getEarnedTitles(playerId: number): Promise<ProtectedTitle[
         earnedTitles.push(title);
       }
     } else {
-      // MULTI_REQUIREMENT_AVERAGE — holder is the player with the highest average score
-      const scores = await prisma.playerAttributeScore.findMany({
+      const [topPlayer] = await prisma.playerAttributeScore.groupBy({
+        by: ['playerId'],
         where: { attributeId: { in: attributeIds }, eventId: event.id },
+        _avg: { score: true },
+        orderBy: { _avg: { score: 'desc' } },
+        take: 1,
       });
 
-      const playerTotals = new Map<number, number>();
-      for (const score of scores) {
-        playerTotals.set(score.playerId, (playerTotals.get(score.playerId) ?? 0) + score.score);
-      }
+      if (topPlayer?.playerId !== playerId) continue;
 
-      let topPlayerId: number | null = null;
-      let topAverage = -1;
-      for (const [pid, total] of playerTotals.entries()) {
-        const avg = total / attributeIds.length;
-        if (avg > topAverage) {
-          topAverage = avg;
-          topPlayerId = pid;
-        }
-      }
+      const failingThreshold = await prisma.playerAttributeScore.findFirst({
+        where: {
+          playerId,
+          eventId: event.id,
+          OR: title.requirements.map((requirement) => ({
+            attributeId: requirement.attributeId,
+            score: { lt: requirement.threshold },
+          })),
+        },
+      });
 
-      if (topPlayerId === playerId) {
-        earnedTitles.push(title);
-      }
+      if (!failingThreshold) earnedTitles.push(title);
     }
   }
 

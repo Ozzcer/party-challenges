@@ -49,11 +49,19 @@ export async function enrollInCurrentGameEvent(
   if (!event) throw new AppError('No current game event', 400);
 
   if (event.players.length === 0) {
+    const attributes = await prisma.attribute.findMany({ select: { id: true } });
+
     await prisma.gameEventPlayer.create({
-      data: {
+      data: { playerId, eventId: event.id },
+    });
+
+    await prisma.playerAttributeScore.createMany({
+      data: attributes.map((attribute) => ({
         playerId,
+        attributeId: attribute.id,
         eventId: event.id,
-      },
+        score: 0,
+      })),
     });
   }
 }

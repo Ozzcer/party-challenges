@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import {
   Challenge,
   ChallengeInstance,
-  ChallengeInstanceDetails,
   CreateChallenge,
+  ProtectedChallengeInstanceDetails,
   ResolveChallenge,
 } from '@party/shared';
 import { Observable } from 'rxjs';
@@ -23,11 +23,13 @@ export class AdminChallengeService {
     return this.apiService.post<Challenge>('/admin/challenges', createChallenge);
   }
 
-  public getActiveChallengeInstances(): Observable<ApiResult<ChallengeInstanceDetails[]>> {
+  public getActiveChallengeInstances(): Observable<ApiResult<ProtectedChallengeInstanceDetails[]>> {
     return this.apiService.get('/admin/challenge-instances/active');
   }
 
-  public getChallengeInstance(id: number): Observable<ApiResult<ChallengeInstanceDetails>> {
+  public getChallengeInstance(
+    id: number,
+  ): Observable<ApiResult<ProtectedChallengeInstanceDetails>> {
     return this.apiService.get('/admin/challenge-instances/' + id);
   }
 

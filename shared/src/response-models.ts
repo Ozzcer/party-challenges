@@ -1,12 +1,12 @@
-import { GameEvent, Title } from './generated';
+import {
+  ChallengeParticipant,
+  GameEvent,
+  Player,
+  PlayerAttributeScore,
+  Title,
+} from './generated';
 import { ProtectedChallengeInstance, ProtectedPlayer } from './protected.model';
 import { WithRequired } from './util.types';
-
-export type CurrentGameEvent = GameEvent & {
-  current: true;
-  totalChallengeInstances: number;
-  totalPlayers: number;
-}
 
 export interface Leaderboard {
   players: ProtectedPlayer[];
@@ -14,4 +14,28 @@ export interface Leaderboard {
   currentPlayerPosition?: number;
 }
 
-export type ChallengeInstanceDetails = WithRequired<ProtectedChallengeInstance, 'participants' | 'challenge'>
+export type CurrentGameEvent = GameEvent & {
+  current: true;
+  totalChallengeInstances: number;
+  totalPlayers: number;
+};
+
+export type ProtectedChallengeInstanceDetails = WithRequired<
+  ProtectedChallengeInstance,
+  'participants' | 'challenge'
+>;
+
+export interface ChallengeParticipantDetails extends Omit<
+  ChallengeParticipant,
+  'instance'
+> {
+  instance: ProtectedChallengeInstanceDetails;
+}
+
+export interface PlayerDetails extends Omit<
+  Player,
+  'challengeParticipation' | 'playerAttributeScores'
+> {
+  challengeParticipation: ChallengeParticipantDetails[];
+  playerAttributeScores: WithRequired<PlayerAttributeScore, 'attribute'>[];
+}
