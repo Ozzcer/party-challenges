@@ -1,14 +1,14 @@
-import { JsonPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth.service';
 import { ChallengeService } from '../../core/services/player/challenge.service';
 import { PlayerService } from '../../core/services/player/player.service';
 import { TitleService } from '../../core/services/player/title.service';
+import { LoadSignalDirective } from '../../shared/directives/load-signal.directive';
 
 @Component({
   selector: 'app-landing',
-  imports: [JsonPipe],
+  imports: [LoadSignalDirective],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss',
 })

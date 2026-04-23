@@ -1,4 +1,8 @@
-<pre>{{ user() | json }}</pre>
-<pre>{{ challenges() | json }}</pre>
-<pre>{{ playerDetails() | json }}</pre>
-<pre>{{ titles() | json }}</pre>
+<ng-container *appLoadSignal="playerDetails(); let result">
+  @if (result.success) {
+    @let player = result.result;
+    <p>{{ player.name }}</p>
+  } @else {
+    <p>{{ result.error.message }}</p>
+  }
+</ng-container>
