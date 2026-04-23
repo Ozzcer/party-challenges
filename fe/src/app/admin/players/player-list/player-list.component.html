@@ -1,11 +1,18 @@
 <section>
   <h1>Active Players</h1>
+  <form [formGroup]="filterForm" (submit)="setFilter()">
+    <label>
+      Search by name
+      <input formControlName="name" placeholder="Name">
+    </label>
+    <button type="submit">Search</button>
+    <button type="reset" (click)="resetFilter()" [disabled]="!filterForm.dirty">Reset</button>
+  </form>
   <ng-container *appLoadSignal="players(); let players">
     @for (player of players; track player.id) {
       <a routerLink="{{ player.id }}">
-        <span>{{ player.id }}</span>
-        <span>{{ player.name }}</span>
-        <span>{{ player.playerCode }}</span>
+        <p>{{ player.name }}</p>
+        <p>{{ player.playerCode }}</p>
       </a>
     } @empty {
       <p>No active players</p>
