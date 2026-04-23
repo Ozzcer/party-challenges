@@ -46,5 +46,8 @@ export async function getUncompletedChallengesForPlayers(
         },
       },
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
 }
