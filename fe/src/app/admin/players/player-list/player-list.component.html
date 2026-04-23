@@ -1,1 +1,29 @@
-<p>players works!</p>
+<section>
+  <h1>Active Players</h1>
+  <ng-container *appLoadSignal="players(); let players">
+    @for (player of players; track player.id) {
+      <a routerLink="{{ player.id }}">
+        <span>{{ player.id }}</span>
+        <span>{{ player.name }}</span>
+        <span>{{ player.playerCode }}</span>
+      </a>
+    } @empty {
+      <p>No active players</p>
+    }
+  </ng-container>
+</section>
+<!-- TODO some kind of pagination? -->
+<section>
+  <h1>Unused Player Codes</h1>
+  <ng-container *appLoadSignal="unusedPlayerCodes(); let unusedPlayerCodes">
+    @if (unusedPlayerCodes.length > 0) {
+      <ul>
+        @for (code of unusedPlayerCodes; track code) {
+          <li>{{code}}</li>
+        }
+      </ul>
+    } @else {
+      <p>No unused player codes</p>
+    }
+  </ng-container>
+</section>
