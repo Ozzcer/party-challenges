@@ -123,8 +123,8 @@ async function seedPlayers() {
 async function seedTitles() {
   const titles: TitleCreateInput[] = [
     {
-      description: 'whimsy',
-      name: 'whimsy',
+      description: 'The most Whimsical of them all',
+      name: 'Whimsy',
       titleType: 'SINGLE_REQUIREMENT',
       imageUrl: '/images/moon.png',
       requirements: {
@@ -137,8 +137,8 @@ async function seedTitles() {
       },
     },
     {
-      description: 'res',
-      name: 'res',
+      description: 'The most Resilient of them all',
+      name: 'Resilience',
       titleType: 'SINGLE_REQUIREMENT',
       imageUrl: '/images/strength.png',
       requirements: {
@@ -151,8 +151,8 @@ async function seedTitles() {
       },
     },
     {
-      description: 'wis',
-      name: 'wis',
+      description: 'The Wisest of them all',
+      name: 'Wisdom',
       titleType: 'SINGLE_REQUIREMENT',
       imageUrl: '/images/hermit.png',
       requirements: {
@@ -165,10 +165,10 @@ async function seedTitles() {
       },
     },
     {
-      description: 'avg',
-      name: 'avg',
+      description: 'The Jack of All Trades',
+      name: 'Jack of All Trades',
       titleType: 'MULTI_REQUIREMENT_AVERAGE',
-      imageUrl: '/images/star.png',
+      imageUrl: '/images/temperance.png',
       requirements: {
         create: [
           {
