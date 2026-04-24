@@ -1,12 +1,15 @@
-import type {
-  Player,
-  PlayerDetails,
-  ProtectedChallengeInstanceDetails,
-  ProtectedPlayer,
-} from '@party/shared';
+import type { Player, PlayerDetails, ProtectedPlayer } from '@party/shared';
 import { AppError } from '../lib/error-handler.lib';
 import { prisma } from '../lib/prisma.lib';
+import { protectedInstanceInclude } from './challenge-instance.service';
 import { getCurrentGameEvent } from './game-event.service';
+
+export const protectedPlayerSelect = {
+  id: true,
+  name: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
 
 export async function listPlayersInCurrentEvent(): Promise<Player[]> {
   const event = await getCurrentGameEvent();
@@ -30,21 +33,7 @@ export async function getPlayerById(id: number): Promise<PlayerDetails | null> {
         where: event ? { instance: { eventId: event.id } } : undefined,
         include: {
           instance: {
-            include: {
-              challenge: true,
-              participants: {
-                include: {
-                  player: {
-                    select: {
-                      id: true,
-                      name: true,
-                      createdAt: true,
-                      updatedAt: true,
-                    },
-                  },
-                },
-              },
-            },
+            include: protectedInstanceInclude,
           },
         },
       },
@@ -105,71 +94,6 @@ export async function getPlayerDetails(
 
   const { playerCode: _, ...protectedPlayer } = player;
   return protectedPlayer;
-}
-
-export async function getPlayerChallenges(
-  playerId: number,
-): Promise<ProtectedChallengeInstanceDetails[]> {
-  const event = await getCurrentGameEvent();
-  if (!event) throw new AppError('No current game event', 400);
-
-  const participants = await prisma.challengeParticipant.findMany({
-    where: { playerId, instance: { eventId: event.id } },
-    include: {
-      instance: {
-        include: {
-          challenge: true,
-          participants: {
-            include: {
-              player: {
-                select: {
-                  id: true,
-                  name: true,
-                  createdAt: true,
-                  updatedAt: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-
-  return participants.map((p) => p.instance);
-}
-
-export async function getPlayerCurrentChallenge(
-  playerId: number,
-): Promise<ProtectedChallengeInstanceDetails | null> {
-  const event = await getCurrentGameEvent();
-  if (!event) return null;
-
-  const participant = await prisma.challengeParticipant.findFirst({
-    where: { playerId, status: 'OPEN', instance: { eventId: event.id } },
-    include: {
-      instance: {
-        include: {
-          challenge: true,
-          participants: {
-            include: {
-              player: {
-                select: {
-                  id: true,
-                  name: true,
-                  createdAt: true,
-                  updatedAt: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-
-  if (!participant) return null;
-  return participant.instance;
 }
 
 export async function getPlayerCodeById(id: number): Promise<string | null> {

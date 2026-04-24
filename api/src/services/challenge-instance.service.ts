@@ -1,23 +1,32 @@
 import type {
   Challenge,
-  ChallengeInstance,
   ChallengeInstanceCreated,
   ChallengeStatus,
   Player,
   ProtectedChallengeInstanceDetails,
-  WithRequired,
 } from '@party/shared';
 import { AppError } from '../lib/error-handler.lib';
 import { prisma } from '../lib/prisma.lib';
 import { getCurrentGameEvent } from './game-event.service';
+import { protectedPlayerSelect } from './player.service';
 
-const instanceInclude = {
-  participants: { include: { player: true } },
-  challenge: true,
+export const protectedInstanceInclude = {
+  participants: {
+    include: {
+      player: {
+        select: protectedPlayerSelect,
+      },
+    },
+  },
+  challenge: {
+    include: {
+      attribute: true,
+    },
+  },
 } as const;
 
 export async function getActiveInstances(): Promise<
-  WithRequired<ChallengeInstance, 'participants' | 'challenge'>[]
+  ProtectedChallengeInstanceDetails[]
 > {
   const event = await getCurrentGameEvent();
   if (!event) throw new AppError('No current game event', 400);
@@ -27,7 +36,7 @@ export async function getActiveInstances(): Promise<
       eventId: event.id,
       participants: { some: { status: 'OPEN' } },
     },
-    include: instanceInclude,
+    include: protectedInstanceInclude,
   });
 
   return instances;
@@ -38,7 +47,7 @@ export async function getInstanceById(
 ): Promise<ProtectedChallengeInstanceDetails | null> {
   const instance = await prisma.challengeInstance.findUnique({
     where: { id },
-    include: instanceInclude,
+    include: protectedInstanceInclude,
   });
 
   return instance;
@@ -88,4 +97,29 @@ export async function assignChallenge(
   }
 
   return [await createInstance(challenge.id, players, eventId)];
+}
+
+export async function getPlayerChallengeInstances(
+  playerId: number,
+): Promise<ProtectedChallengeInstanceDetails[]> {
+  return await prisma.challengeInstance.findMany({
+    where: {
+      event: { current: true },
+      participants: { some: { playerId, NOT: { status: 'OPEN' } } },
+    },
+    include: protectedInstanceInclude,
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
+export async function getPlayerCurrentChallengeInstance(
+  playerId: number,
+): Promise<ProtectedChallengeInstanceDetails | null> {
+  return await prisma.challengeInstance.findFirst({
+    where: {
+      event: { current: true },
+      participants: { some: { playerId, status: 'OPEN' } },
+    },
+    include: protectedInstanceInclude,
+  });
 }

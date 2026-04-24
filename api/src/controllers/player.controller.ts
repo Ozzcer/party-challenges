@@ -9,10 +9,12 @@ import {
   setNameBodySchema,
 } from '../schema/player.schema';
 import {
+  getPlayerChallengeInstances,
+  getPlayerCurrentChallengeInstance,
+} from '../services/challenge-instance.service';
+import {
   getPlayerByCode,
   getPlayerById,
-  getPlayerChallenges,
-  getPlayerCurrentChallenge,
   getPlayerDetails,
   getUnusedPlayerCodes,
   isPlayerEnrolled,
@@ -93,7 +95,7 @@ export async function getPlayerChallengesHandler(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const challenges = await getPlayerChallenges(request.user.id);
+  const challenges = await getPlayerChallengeInstances(request.user.id);
   reply.send(challenges);
 }
 
@@ -101,7 +103,7 @@ export async function getPlayerCurrentChallengeHandler(
   request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const challenge = await getPlayerCurrentChallenge(request.user.id);
+  const challenge = await getPlayerCurrentChallengeInstance(request.user.id);
   if (!challenge) throw new AppError('No active challenge', 404);
   reply.send(challenge);
 }
@@ -110,7 +112,7 @@ export async function getPlayerCurrentChallengeByIdHandler(
   request: FastifyRequest<{ Params: FromSchema<typeof playerIdParamsSchema> }>,
   reply: FastifyReply,
 ): Promise<void> {
-  const challenge = await getPlayerCurrentChallenge(request.params.id);
+  const challenge = await getPlayerCurrentChallengeInstance(request.params.id);
   if (!challenge) throw new AppError('No active challenge', 404);
   reply.send(challenge);
 }

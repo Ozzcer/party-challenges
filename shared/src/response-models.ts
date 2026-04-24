@@ -31,14 +31,16 @@ export type ProtectedChallengeParticipantDetails = WithRequired<
   ProtectedChallengeParticipant,
   'player'
 >;
+export type ProtectedChallengeDetails = WithRequired<ProtectedChallenge, 'attribute'>;
 
 export interface ProtectedChallengeInstanceDetails extends Omit<
   ProtectedChallengeInstance,
   'participants' | 'challenges'
 > {
   participants: ProtectedChallengeParticipantDetails[];
-  challenge: ProtectedChallenge;
+  challenge: ProtectedChallengeDetails;
 } 
+
 
 export interface ChallengeParticipantDetails extends Omit<
   ChallengeParticipant,
