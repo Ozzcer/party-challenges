@@ -1,21 +1,48 @@
-<nav>
-  <a routerLink="/admin">Home</a>
-  <a routerLink="/admin/players">Players</a>
-  <a routerLink="/admin/challenges">Challenges</a>
-  <a routerLink="/public/leaderboard">Leaderboard</a>
+<nav class="nav">
+  <div class="links desktop">
+    <a routerLink="/admin">
+      <img src="/images/logo-white.png" height="50" width="auto" />
+    </a>
+    <a routerLink="/admin/players">Players</a>
+    <a routerLink="/admin/challenges">Challenges</a>
+    <a routerLink="/public/leaderboard">Leaderboard</a>
+  </div>
 
-  <form [formGroup]="searchForm" (ngSubmit)="searchByCode()">
-    <label>
-      Player code
-      <input type="text" formControlName="playerCode" placeholder="Player code" />
-    </label>
-    <button type="submit">Go</button>
-    @if (searchError()) {
-      <span>{{ searchError() }}</span>
-    }
-  </form>
+  <div class="actions">
+    <form class="player-search-form" [formGroup]="searchForm" (ngSubmit)="searchByCode()">
+      @if (searchError()) {
+        <span class="error-text">
+          {{ searchError() }}
+        </span>
+      }
+      <mat-form-field subscriptSizing="dynamic">
+        <mat-label>Player code</mat-label>
+        <input type="text" formControlName="playerCode" placeholder="Player code" matInput />
+      </mat-form-field>
+      <button matIconButton aria-label="Search">
+        <mat-icon>search</mat-icon>
+      </button>
+    </form>
 
-  <button type="button" (click)="logout()">Logout</button>
+    <button type="button" (click)="logout()" matButton="outlined" class="desktop">Logout</button>
+  </div>
+
+  <div class="mobile">
+    <button matIconButton aria-label="Menu" [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <div class="admin-menu">
+        <a routerLink="/admin">Home</a>
+        <a routerLink="/admin/players">Players</a>
+        <a routerLink="/admin/challenges">Challenges</a>
+        <a routerLink="/public/leaderboard">Leaderboard</a>
+        <button type="button" (click)="logout()" matButton="outlined">
+          Logout
+        </button>
+      </div>
+    </mat-menu>
+  </div>
 </nav>
 
 <router-outlet />

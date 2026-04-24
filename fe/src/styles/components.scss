@@ -1,3 +1,4 @@
+@use '@angular/material' as mat;
 .error-text {
   display: block;
   margin-top: 0.5rem;
@@ -12,6 +13,7 @@
   justify-content: space-around;
   background-color: var(--mat-sys-surface-container);
   padding: 0.5rem;
+  max-height: 70px;
   a {
     all: unset;
     display: flex;
@@ -19,4 +21,6 @@
     font-size: 1.5rem;
     cursor: pointer;
   }
+  
+  @include mat.form-field-density(-3);
 }
