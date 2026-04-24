@@ -1,23 +1,39 @@
-<h1>Challenge Instance</h1>
-<ng-container *appLoadSignal="challengeInstance(); let challengeInstance">
-  <h2>{{challengeInstance.challenge.description}}</h2>
-  @if (unresolved()) {
-    <button (click)="markAsFailed(challengeInstance.id)">Mark as failed</button>
-  }
-  @for (participant of challengeInstance.participants; track participant.id) {
-    <div>
-      <a routerLink="/admin/players/{{participant.playerId}}">{{participant.player.name}}</a>
-      @switch (participant.status) {
-        @case ('OPEN') {
-          <button (click)="setWinner(participant.player, challengeInstance.id)">Set Winner</button>
-        }
-        @case ('COMPLETED') {
-          <p>Winner!</p>
-        }
-        @case ('FAILED') {
-          <p>Failed...</p>
-        }
+<div class="page-container">
+  <section class="section">
+    <h1>Challenge Instance</h1>
+    <ng-container *appLoadSignal="challengeInstance(); let challengeInstance">
+      <h2>{{ challengeInstance.challenge.description }}</h2>
+      @if (unresolved()) {
+        <button (click)="markAsFailed(challengeInstance.id)" matButton="filled">
+          Mark as failed
+        </button>
       }
-    </div>
-  }
-</ng-container>
+      <div class="participant-container">
+        <h3>Players:</h3>
+        @for (participant of challengeInstance.participants; track participant.id) {
+          <div class="participant">
+            <a routerLink="/admin/players/{{ participant.playerId }}">{{
+              participant.player.name
+            }}</a>
+            @switch (participant.status) {
+              @case ('OPEN') {
+                <button
+                  (click)="setWinner(participant.player, challengeInstance.id)"
+                  matButton="filled"
+                >
+                  Set Winner
+                </button>
+              }
+              @case ('COMPLETED') {
+                <p>Winner!</p>
+              }
+              @case ('FAILED') {
+                <p>Failed...</p>
+              }
+            }
+          </div>
+        }
+      </div>
+    </ng-container>
+  </section>
+</div>

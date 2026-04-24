@@ -1,5 +1,6 @@
 import { Component, DOCUMENT, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProtectedPlayer } from '@party/shared';
 import { filter, map, shareReplay, switchMap } from 'rxjs';
@@ -9,7 +10,7 @@ import { LoadSignalDirective } from '../../../shared/directives/load-signal.dire
 
 @Component({
   selector: 'app-resolve-challenge',
-  imports: [LoadSignalDirective, RouterLink],
+  imports: [LoadSignalDirective, RouterLink, MatButtonModule],
   templateUrl: './resolve-challenge.component.html',
   styleUrl: './resolve-challenge.component.scss',
 })
