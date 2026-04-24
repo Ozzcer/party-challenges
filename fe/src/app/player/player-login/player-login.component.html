@@ -1,14 +1,16 @@
 <div class="page-container-center">
-  <img src="/images/white-logo.png" height="200">
+  <img src="/images/white-logo.png" height="200" />
   <h1>Arcana</h1>
   <form class="flex column" [formGroup]="form" (ngSubmit)="login()">
-    <label>
-      Player Code
-      <input formControlName="playerCode" type="text" placeholder="Player code" />
-    </label>
-    <button type="submit" [disabled]="form.invalid">Login</button>
-    @if (error()) {
-      <p>{{ error() }}</p>
-    }
+    <mat-form-field>
+      <mat-label>Player Code</mat-label>
+      <input formControlName="playerCode" type="text" placeholder="Player code" matInput />
+    </mat-form-field>
+    <button type="submit" [disabled]="form.invalid" matButton="outlined">Login</button>
+    <span class="error-text">
+      @if (error()) {
+        {{ error() }}
+      }
+    </span>
   </form>
 </div>

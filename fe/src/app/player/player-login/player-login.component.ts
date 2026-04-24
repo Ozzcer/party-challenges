@@ -1,11 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-player-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './player-login.component.html',
   styleUrl: './player-login.component.scss',
 })
@@ -22,7 +25,7 @@ export class PlayerLoginComponent {
   login(): void {
     if (this.form.invalid) return;
 
-    this.authService.publicLogin(this.form.value.playerCode!).subscribe(res => {
+    this.authService.publicLogin(this.form.value.playerCode!).subscribe((res) => {
       if (res.success) {
         this.router.navigateByUrl('/');
       } else {
