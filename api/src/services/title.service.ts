@@ -18,7 +18,7 @@ async function isSingleRequirementEarned(
       eventId,
       score: { gte: requirement.threshold },
     },
-    orderBy: { score: 'desc' },
+    orderBy: [{ score: 'desc' }, { updatedAt: 'asc' }],
   });
   return topScore?.playerId === playerId;
 }
@@ -36,7 +36,7 @@ async function isMultiRequirementEarned(
     by: ['playerId'],
     where: { attributeId: { in: attributeIds }, eventId },
     _avg: { score: true },
-    orderBy: { _avg: { score: 'desc' } },
+    orderBy: [{ _avg: { score: 'desc' } }, { _max: { updatedAt: 'asc' } }],
     take: 1,
   });
 
