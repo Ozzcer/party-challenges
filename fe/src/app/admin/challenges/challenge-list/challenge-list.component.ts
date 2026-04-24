@@ -1,7 +1,7 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -98,7 +98,7 @@ export class ChallengeListComponent {
   public readonly challenges = toSignal(this.challenges$);
 
   public readonly addPlayerForm = new FormGroup({
-    playerCode: new FormControl('', { nonNullable: true }),
+    playerCode: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
   public readonly addResult = signal<string>('');
   public readonly assignResult = signal<ChallengeInstanceCreated[] | null>(null);

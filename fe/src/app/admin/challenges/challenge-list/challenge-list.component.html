@@ -8,7 +8,7 @@
           <mat-label>Player Code</mat-label>
           <input type="text" formControlName="playerCode" matInput />
         </mat-form-field>
-        <button type="submit" matButton="outlined">Add</button>
+        <button type="submit" matButton="filled" [disabled]="!addPlayerForm.valid">Add</button>
         <span>{{ addResult() }}</span>
       </form>
       <div class="players-container">

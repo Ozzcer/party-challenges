@@ -1,0 +1,9 @@
+.section {
+  width: 100%;
+  .create-challenge-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+}

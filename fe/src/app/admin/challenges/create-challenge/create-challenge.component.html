@@ -1,47 +1,52 @@
-@let attributesResult = attributes();
+<div class="page-container">
+  <h1>Create a new challenge</h1>
+  <section class="section">
+    @let attributesResult = attributes();
 
-<form [formGroup]="form" (ngSubmit)="createChallenge()">
-  <label>
-    Description
-    <input type="text" formControlName="description" />
-  </label>
+    <form class="create-challenge-form" [formGroup]="form" (ngSubmit)="createChallenge()">
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <input type="text" formControlName="description" matInput />
+      </mat-form-field>
 
-  <label>
-    Attribute
-    @if (attributesResult === undefined) {
-      <select disabled>
-        <option>Loading...</option>
-      </select>
-    } @else if (attributesResult.success) {
-      <select formControlName="attributeId">
-        <option [value]="null" disabled>Select attribute</option>
-        @for (attribute of attributesResult.result; track attribute.id) {
-          <option [value]="attribute.id">{{ attribute.name }}</option>
+      <mat-form-field>
+        <mat-label>Attribute</mat-label>
+        @if (attributesResult === undefined) {
+          <mat-select formControlName="attributeId" [disabled]="true">
+            <mat-option>Loading...</mat-option>
+          </mat-select>
+        } @else if (attributesResult.success) {
+          <mat-select formControlName="attributeId">
+            <mat-option [value]="null" disabled>Select attribute</mat-option>
+            @for (attribute of attributesResult.result; track attribute.id) {
+              <mat-option [value]="attribute.id">{{ attribute.name }}</mat-option>
+            }
+          </mat-select>
+        } @else {
+          <p>Failed to load attributes: {{ attributesResult.error.message }}</p>
         }
-      </select>
-    } @else {
-      <p>Failed to load attributes: {{ attributesResult.error.message }}</p>
-    }
-  </label>
+      </mat-form-field>
 
-  <label>
-    Type
-    <select formControlName="type">
-      <option value="" disabled>Select type</option>
-      @for (type of challengeTypes; track type) {
-        <option [value]="type">{{ type }}</option>
+      <mat-form-field>
+        <mat-label>Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option value="" disabled>Select type</mat-option>
+          @for (type of challengeTypes; track type) {
+            <mat-option [value]="type">{{ type }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Score</mat-label>
+        <input type="number" formControlName="score" min="1" matInput />
+      </mat-form-field>
+
+      @if (submitError()) {
+        <p>{{ submitError() }}</p>
       }
-    </select>
-  </label>
 
-  <label>
-    Score
-    <input type="number" formControlName="score" min="1" />
-  </label>
-
-  @if (submitError()) {
-    <p>{{ submitError() }}</p>
-  }
-
-  <button type="submit" [disabled]="form.invalid">Create Challenge</button>
-</form>
+      <button type="submit" [disabled]="form.invalid" matButton="filled">Create Challenge</button>
+    </form>
+  </section>
+</div>

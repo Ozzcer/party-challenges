@@ -1,6 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChallengeType } from '@party/shared';
 import { firstValueFrom } from 'rxjs';
@@ -9,7 +13,7 @@ import { DialogService } from '../../../core/services/dialog.service';
 
 @Component({
   selector: 'app-create-challenge',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule],
   templateUrl: './create-challenge.component.html',
   styleUrl: './create-challenge.component.scss',
 })
