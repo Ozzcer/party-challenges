@@ -2,6 +2,10 @@ import { TitleCasePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ChallengeInstanceCreated } from '@party/shared';
 import {
@@ -25,7 +29,16 @@ import { LoadSignalDirective } from '../../../shared/directives/load-signal.dire
 
 @Component({
   selector: 'app-challenge-list',
-  imports: [LoadSignalDirective, ReactiveFormsModule, TitleCasePipe, RouterLink],
+  imports: [
+    LoadSignalDirective,
+    ReactiveFormsModule,
+    TitleCasePipe,
+    RouterLink,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatIconModule,
+  ],
   templateUrl: './challenge-list.component.html',
   styleUrl: './challenge-list.component.scss',
 })
@@ -89,7 +102,7 @@ export class ChallengeListComponent {
   });
   public readonly addResult = signal<string>('');
   public readonly assignResult = signal<ChallengeInstanceCreated[] | null>(null);
-  public readonly assignError = signal<string>('');
+  public readonly assignError = signal<{ error: string; id: number } | null>(null);
 
   private playerCodeToAddAction(): OperatorFunction<string, MutatePlayersAction> {
     return (source$) =>
@@ -124,18 +137,21 @@ export class ChallengeListComponent {
     this.removePlayerIdSubject.next(playerId);
   }
 
-  public assignChallenge(challengeId: number, players: PlayerEntry[]): void {
-    const confirm = this.dialogService.showConfirmDialog(
+  public async assignChallenge(challengeId: number, players: PlayerEntry[]): Promise<void> {
+    const confirm = await this.dialogService.showConfirmDialog(
       `Are you sure you wish to assign this challenge to: ${players.map((player) => player.playerCode).toString()}`,
     );
     if (!confirm) return;
+
     this.adminChallengeService
       .assignChallenge(
         challengeId,
         players.map((player) => player.id),
       )
       .subscribe((res) =>
-        res.success ? this.assignResult.set(res.result) : this.assignError.set(res.error.message),
+        res.success
+          ? this.assignResult.set(res.result)
+          : this.assignError.set({ error: res.error.message, id: challengeId }),
       );
   }
 }

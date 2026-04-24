@@ -1,58 +1,82 @@
 @let playerList = players();
-<section>
-  <h1>Players</h1>
-  <form [formGroup]="addPlayerForm" (ngSubmit)="addPlayer()">
-    <label>
-      Player Code
-      <input type="text" formControlName="playerCode" />
-    </label>
-    <button type="submit">Add</button>
-    <span>{{ addResult() }}</span>
-  </form>
-  @for (player of playerList; track player.id) {
-    <button (click)="removePlayer(player.id)">
-      {{ player.playerCode }}
-    </button>
-  }
-</section>
-<section>
-  @let assignErrorText = assignError();
-  @let assignResultData = assignResult();
-  @if (assignResultData === null) {
-    <h1>Challenges</h1>
-    <p>{{ assignErrorText }}</p>
-    <ng-container *appLoadSignal="challenges(); let challenges">
-      @for (challenge of challenges; track challenge.id) {
-        <div style="background-color: gainsboro; margin: 5px">
-          <p>{{ challenge.attribute.name }}</p>
-          <p>{{ challenge.description }}</p>
-          <p>{{ challenge.type | titlecase }}</p>
-          <p>{{ challenge.score }}</p>
-          @if (playerList.length === 0) {
-            <p>Add a player above to assign a challenge</p>
-          } @else if (challenge.type === 'ADVERSARIAL' && playerList.length < 2) {
-            <p>At least 2 players required for Adverserial challenges, add another above</p>
-          } @else if (playerList.length > 0) {
-            <button (click)="assignChallenge(challenge.id, playerList)">Assign challenge</button>
+<div class="page-container">
+  <div class="container">
+    <section class="challenge-section">
+      <h1>Players</h1>
+      <form class="add-player-form" [formGroup]="addPlayerForm" (ngSubmit)="addPlayer()">
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label>Player Code</mat-label>
+          <input type="text" formControlName="playerCode" matInput />
+        </mat-form-field>
+        <button type="submit" matButton="outlined">Add</button>
+        <span>{{ addResult() }}</span>
+      </form>
+      <div class="players-container">
+        @for (player of playerList; track player.id) {
+          <button matFab extended (click)="removePlayer(player.id)">
+            <mat-icon>cancel</mat-icon>
+            {{ player.playerCode }}
+          </button>
+        }
+      </div>
+    </section>
+    <section class="challenge-section">
+      @let assignErrorText = assignError();
+      @let assignResultData = assignResult();
+      @if (assignResultData === null) {
+        <h1>Challenges</h1>
+        <a
+          class="create-new-button"
+          routerLink="/admin/challenges/create"
+          [queryParams]="{ playerCodes: playerCodes() }"
+        >
+          <button matButton="filled">Create a new challenge</button>
+        </a>
+        <div class="challenge-container">
+          <ng-container *appLoadSignal="challenges(); let challenges">
+            @for (challenge of challenges; track challenge.id) {
+              <div class="challenge">
+                <span>
+                  {{ challenge.type | titlecase }} | {{ challenge.attribute.name }} |
+                  {{ challenge.score }}</span
+                >
+                <span class="description">{{ challenge.description }}</span>
+                @if (playerList.length === 0) {
+                  <span>Add a player to assign a challenge</span>
+                } @else if (challenge.type === 'ADVERSARIAL' && playerList.length < 2) {
+                  <span> At least 2 players required for Adverserial challenges. </span>
+                } @else if (playerList.length > 0) {
+                  <button (click)="assignChallenge(challenge.id, playerList)" matButton="filled">
+                    Assign challenge
+                  </button>
+                }
+                @if (assignErrorText && assignErrorText.id === challenge.id) {
+                  <span class="error-text">{{ assignErrorText.error }}</span>
+                }
+              </div>
+            } @empty {
+              <p>Player has completed all challenges, create a new one above.</p>
+            }
+          </ng-container>
+        </div>
+      } @else {
+        <h2>Created challenges:</h2>
+        <div class="created-instances">
+          @for (result of assignResultData; track result.challengeInstance.id) {
+            <div class="created-instance">
+              <h3>Players:</h3>
+              <div class="instance-player-container">
+                @for (player of result.players; track player.id) {
+                  <span>{{ player.name }} | {{ player.playerCode }}</span>
+                }
+              </div>
+              <a routerLink="/admin/challenge-instances/{{ result.challengeInstance.id }}/resolve">
+                <button matButton="filled">Go to this challenge instance</button>
+              </a>
+            </div>
           }
         </div>
-      } @empty {
-        <p>Player has completed all challenges, create a new one below.</p>
       }
-    </ng-container>
-    <a routerLink="/admin/challenges/create" [queryParams]="{ playerCodes: playerCodes() }"
-      >Create a new challenge</a
-    >
-  } @else {
-    <h2>Created challenges:</h2>
-    @for (result of assignResultData; track result.challengeInstance.id) {
-      <a routerLink="/admin/challenge-instances/{{ result.challengeInstance.id }}/resolve">
-        <span>Click to go to challenge resolution for this instance</span>
-        @for (player of result.players; track player.id) {
-          <p>{{ player.name }}</p>
-          <p>{{ player.playerCode }}</p>
-        }
-      </a>
-    }
-  }
-</section>
+    </section>
+  </div>
+</div>
