@@ -1,19 +1,7 @@
-@let result = leaderboards();
-leaderboard
-@if (result === undefined) {
-  <app-loading />
-} @else if (result.success) {
-  @for (lb of result.result; track lb.title.id) {
-    <section>
-      <h2>{{ lb.title.name }}</h2>
-      <ol>
-        @for (player of lb.players; track player.id) {
-          <li>{{ player.name }}</li>
-        }
-      </ol>
-      <p>Your position: {{ lb.currentPlayerPosition }}</p>
-    </section>
+
+<h1>Leaderboards</h1>
+<ng-container *appLoadSignal="leaderboards(); let leaderboards">
+  @for (leaderboard of leaderboards; track leaderboard.title.id) {
+    <app-leaderboard-table></app-leaderboard-table>
   }
-} @else {
-  <p>{{ result.error.message }}</p>
-}
+</ng-container>

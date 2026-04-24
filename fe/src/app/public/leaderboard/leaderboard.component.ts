@@ -1,16 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../core/services/auth.service';
 import { LeaderboardService } from '../../core/services/public/leaderboard.service';
-import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadSignalDirective } from '../../shared/directives/load-signal.directive';
+import { LeaderboardTableComponent } from './components/leaderboard-table/leaderboard-table.component';
 
 @Component({
   selector: 'app-leaderboard',
-  imports: [LoadingComponent],
+  imports: [LeaderboardTableComponent, LoadSignalDirective],
   templateUrl: './leaderboard.component.html',
   styleUrl: './leaderboard.component.scss',
 })
 export class LeaderboardComponent {
   private readonly leaderboardService = inject(LeaderboardService);
 
-  readonly leaderboards = toSignal(this.leaderboardService.getLeaderboards());
+  public user = toSignal(inject(AuthService).user$);
+  public readonly leaderboards = toSignal(this.leaderboardService.getLeaderboards());
 }
