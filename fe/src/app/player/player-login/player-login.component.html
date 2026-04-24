@@ -1,10 +1,14 @@
-<form [formGroup]="form" (ngSubmit)="login()">
-  <label>
-    Player Code
-    <input formControlName="playerCode" type="text" placeholder="Player code" />
-  </label>
-  <button type="submit" [disabled]="form.invalid">Login</button>
-  @if (error()) {
-    <p>{{ error() }}</p>
-  }
-</form>
+<div class="page-container-center">
+  <img src="/images/white-logo.png" height="200">
+  <h1>Arcana</h1>
+  <form class="flex column" [formGroup]="form" (ngSubmit)="login()">
+    <label>
+      Player Code
+      <input formControlName="playerCode" type="text" placeholder="Player code" />
+    </label>
+    <button type="submit" [disabled]="form.invalid">Login</button>
+    @if (error()) {
+      <p>{{ error() }}</p>
+    }
+  </form>
+</div>
