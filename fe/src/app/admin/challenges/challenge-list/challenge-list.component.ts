@@ -3,12 +3,14 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ChallengeInstanceCreated } from '@party/shared';
 import {
+  combineLatest,
   filter,
   map,
   merge,
@@ -38,6 +40,7 @@ import { LoadSignalDirective } from '../../../shared/directives/load-signal.dire
     MatButtonModule,
     MatInputModule,
     MatIconModule,
+    MatCheckboxModule,
   ],
   templateUrl: './challenge-list.component.html',
   styleUrl: './challenge-list.component.scss',
@@ -93,16 +96,49 @@ export class ChallengeListComponent {
     ),
   );
 
-  public readonly players = toSignal(this.players$, { initialValue: [] as PlayerEntry[] });
-  public readonly playerCodes = computed(() => this.players().map((p) => p.playerCode));
-  public readonly challenges = toSignal(this.challenges$);
-
+  // TODO make dynamic
+  public readonly filterForm = new FormGroup<{ [x: number]: FormControl<boolean> }>({
+    1: new FormControl<boolean>(false, { nonNullable: true }),
+    2: new FormControl<boolean>(false, { nonNullable: true }),
+    3: new FormControl<boolean>(false, { nonNullable: true }),
+  });
   public readonly addPlayerForm = new FormGroup({
     playerCode: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
   public readonly addResult = signal<string>('');
   public readonly assignResult = signal<ChallengeInstanceCreated[] | null>(null);
   public readonly assignError = signal<{ error: string; id: number } | null>(null);
+  public readonly challenges = toSignal(
+    combineLatest({
+      form: this.filterForm.valueChanges.pipe(
+        startWith({
+          1: false,
+          2: false,
+          3: false,
+        } as Partial<{ [x: number]: boolean }>),
+      ),
+      challengesResult: this.challenges$,
+    }).pipe(
+      map(({ form, challengesResult }) => {
+        const filterSet = Object.values(form).some((val) => val);
+        if (challengesResult.success && filterSet) {
+          const filteredChallenges = challengesResult.result.filter((challenge) => {
+            return form[challenge.attributeId] === true;
+          });
+
+          challengesResult = {
+            ...challengesResult,
+            result: filteredChallenges,
+          };
+        }
+        return challengesResult;
+      }),
+    ),
+  );
+
+  public readonly players = toSignal(this.players$, { initialValue: [] as PlayerEntry[] });
+  public readonly playerCodes = computed(() => this.players().map((p) => p.playerCode));
+  // public readonly challenges = toSignal(this.challenges$);
 
   private playerCodeToAddAction(): OperatorFunction<string, MutatePlayersAction> {
     return (source$) =>

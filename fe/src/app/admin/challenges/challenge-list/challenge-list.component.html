@@ -32,6 +32,14 @@
         >
           <button matButton="filled">Create a new challenge</button>
         </a>
+        <div class="challenge-filter">
+          <h4>Challenge Filter:</h4>
+            <form class="filter-form" [formGroup]="filterForm">
+              <mat-checkbox formControlName="1">Whimsy</mat-checkbox>
+              <mat-checkbox formControlName="2">Resilience</mat-checkbox>
+              <mat-checkbox formControlName="3">Wisdom</mat-checkbox>
+            </form>
+        </div>
         <div class="challenge-container">
           <ng-container *appLoadSignal="challenges(); let challenges">
             @for (challenge of challenges; track challenge.id) {
