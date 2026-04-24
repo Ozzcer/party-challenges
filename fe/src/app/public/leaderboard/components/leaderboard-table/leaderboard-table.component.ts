@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { Leaderboard, User } from '@party/shared';
 
 @Component({
   selector: 'app-leaderboard-table',
@@ -6,4 +7,7 @@ import { Component } from '@angular/core';
   templateUrl: './leaderboard-table.component.html',
   styleUrl: './leaderboard-table.component.scss',
 })
-export class LeaderboardTableComponent {}
+export class LeaderboardTableComponent {
+  public readonly leaderboard = input.required<Leaderboard>();
+  public readonly user = input.required<User>();
+}

@@ -2,9 +2,10 @@ import type { FastifyReply, FastifyRequest } from 'fastify';
 import { getLeaderboards } from '../services/leaderboard.service';
 
 export async function getLeaderboardsHandler(
-  _request: FastifyRequest,
+  request: FastifyRequest,
   reply: FastifyReply,
 ): Promise<void> {
-  const leaderboards = await getLeaderboards();
+  const playerId = request.user.role === 'player' ? request.user.id : undefined;
+  const leaderboards = await getLeaderboards(playerId);
   reply.send(leaderboards);
 }

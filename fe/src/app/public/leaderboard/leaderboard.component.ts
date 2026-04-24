@@ -14,6 +14,6 @@ import { LeaderboardTableComponent } from './components/leaderboard-table/leader
 export class LeaderboardComponent {
   private readonly leaderboardService = inject(LeaderboardService);
 
-  public user = toSignal(inject(AuthService).user$);
+  public user = toSignal(inject(AuthService).user$, { requireSync: true });
   public readonly leaderboards = toSignal(this.leaderboardService.getLeaderboards());
 }
