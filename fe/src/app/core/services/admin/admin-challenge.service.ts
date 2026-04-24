@@ -19,17 +19,17 @@ export class AdminChallengeService {
   private readonly apiService = inject(ApiService);
 
   public getAttributes(): Observable<ApiResult<Attribute[]>> {
-    return this.apiService.get<Attribute[]>('admin/attributes');
+    return this.apiService.get<Attribute[]>('/admin/attributes');
   }
 
   public getChallenges(): Observable<ApiResult<Challenge[]>> {
-    return this.apiService.get<Challenge[]>('admin/challenges');
+    return this.apiService.get<Challenge[]>('/admin/challenges');
   }
 
   public getUncompletedChallengesByPlayers(
     playerIds: number[],
   ): Observable<ApiResult<ChallengeDetails[]>> {
-    return this.apiService.post<ChallengeDetails[]>('admin/challenges/uncompleted', { playerIds });
+    return this.apiService.post<ChallengeDetails[]>('/admin/challenges/uncompleted', { playerIds });
   }
 
   public createChallenge(createChallenge: CreateChallenge): Observable<ApiResult<Challenge>> {
