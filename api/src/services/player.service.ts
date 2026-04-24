@@ -1,4 +1,8 @@
-import type { Player, PlayerDetails, ProtectedPlayer } from '@party/shared';
+import type {
+  Player,
+  PlayerDetails,
+  ProtectedPlayerDetails,
+} from '@party/shared';
 import { AppError } from '../lib/error-handler.lib';
 import { prisma } from '../lib/prisma.lib';
 import { protectedInstanceInclude } from './challenge-instance.service';
@@ -88,12 +92,21 @@ export async function isPlayerEnrolled(playerId: number): Promise<boolean> {
 
 export async function getPlayerDetails(
   playerId: number,
-): Promise<ProtectedPlayer | null> {
-  const player = await prisma.player.findUnique({ where: { id: playerId } });
+): Promise<ProtectedPlayerDetails | null> {
+  const player = await prisma.player.findUnique({
+    where: {
+      id: playerId,
+    },
+    select: {
+      ...protectedPlayerSelect,
+      playerAttributeScores: {
+        include: { attribute: true },
+      },
+    },
+  });
   if (!player) return null;
 
-  const { playerCode: _, ...protectedPlayer } = player;
-  return protectedPlayer;
+  return player;
 }
 
 export async function getPlayerCodeById(id: number): Promise<string | null> {

@@ -7,7 +7,6 @@
   width: 100%;
   height: 100%;
   background-color: var(--mat-sys-surface-container);
-  border-radius: 1rem;
   @include outline;
   padding: 0.5rem;
 
@@ -16,17 +15,25 @@
     flex-direction: row;
     align-items: start;
     width: 100%;
-    gap: 1rem;
+    gap: 1.5rem;
 
     .info-container {
       display: flex;
       flex-direction: column;
       align-items: start;
+      @include outline;
+      padding: 0.5rem;
+      min-width: 100px;
+
+      span {
+        white-space: nowrap;
+      }
     }
   }
 
   .table-header {
     justify-content: center;
+    margin-bottom: 0.5rem;
   }
 
   .player-table {
@@ -36,7 +43,6 @@
     justify-content: center;
     width: 100%;
     @include outline;
-    border-radius: 1rem;
     overflow: hidden;
 
     .player {

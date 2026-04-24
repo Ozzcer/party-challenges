@@ -3,7 +3,34 @@
   <h1>Welcome {{ userDetails.name }} | {{ userDetails.playerCode }}</h1>
   <div class="wrap-container">
     <section class="section">
-      <h2>Current Challenge</h2>
+      <h2 class="heading">Your Stats</h2>
+      <div class="score-container">
+        <ng-container *appLoadSignal="player(); let player">
+          @for (score of player.playerAttributeScores; track score.id) {
+            <!-- TODO move to comp -->
+            @let attributeIcon = attributeIcons[score.attribute.id];
+            <div class="score-card">
+              <div class="header">
+                <mat-icon
+                  aria-hidden="false"
+                  aria-label="{{ score.attribute.name }}"
+                  fontIcon="{{ attributeIcon }}"
+                  matTooltip="{{ score.attribute.name }}"
+                ></mat-icon>
+                <h3>
+                  {{ score.attribute.name }}
+                </h3>
+              </div>
+              <span class="score">
+                {{ score.score }}
+              </span>
+            </div>
+          }
+        </ng-container>
+      </div>
+    </section>
+    <section class="section">
+      <h2 class="heading">Current Challenge</h2>
       <ng-container *appLoadSignal="currentChallenge(); let currentChallenge">
         <app-challenge-card
           class="challenge"
@@ -13,7 +40,7 @@
       </ng-container>
     </section>
     <section class="section">
-      <h2>Your Titles</h2>
+      <h2 class="heading">Your Titles</h2>
       <div class="title-container">
         <ng-container *appLoadSignal="titles(); let titles">
           @for (title of titles; track title.id) {
@@ -24,11 +51,15 @@
     </section>
   </div>
   <section class="section">
-    <h2>Completed Challenges</h2>
+    <h2 class="heading">Completed Challenges</h2>
     <div class="challenge-container">
       <ng-container *appLoadSignal="challenges(); let challenges">
         @for (challenge of challenges; track challenge.id) {
-          <app-challenge-card class="challenge" [userId]="userDetails.id" [challenge]="challenge"></app-challenge-card>
+          <app-challenge-card
+            class="challenge"
+            [userId]="userDetails.id"
+            [challenge]="challenge"
+          ></app-challenge-card>
         } @empty {
           <p>No challenges completed yet.</p>
         }

@@ -11,7 +11,8 @@ import {
   ProtectedChallengeInstance,
   ProtectedChallengeParticipant,
   ProtectedPlayer,
-  ProtectedTitle
+  ProtectedPlayerAttributeScore,
+  ProtectedTitle,
 } from './protected.model';
 import { WithRequired } from './util.types';
 
@@ -31,7 +32,10 @@ export type ProtectedChallengeParticipantDetails = WithRequired<
   ProtectedChallengeParticipant,
   'player'
 >;
-export type ProtectedChallengeDetails = WithRequired<ProtectedChallenge, 'attribute'>;
+export type ProtectedChallengeDetails = WithRequired<
+  ProtectedChallenge,
+  'attribute'
+>;
 
 export interface ProtectedChallengeInstanceDetails extends Omit<
   ProtectedChallengeInstance,
@@ -39,8 +43,7 @@ export interface ProtectedChallengeInstanceDetails extends Omit<
 > {
   participants: ProtectedChallengeParticipantDetails[];
   challenge: ProtectedChallengeDetails;
-} 
-
+}
 
 export interface ChallengeParticipantDetails extends Omit<
   ChallengeParticipant,
@@ -62,4 +65,14 @@ export type ChallengeDetails = WithRequired<Challenge, 'attribute'>;
 export interface ChallengeInstanceCreated {
   challengeInstance: ChallengeInstance;
   players: Player[];
+}
+
+export interface ProtectedPlayerDetails extends Omit<
+  ProtectedPlayer,
+  'playerAttributeScores'
+> {
+  playerAttributeScores: WithRequired<
+    ProtectedPlayerAttributeScore,
+    'attribute'
+  >[];
 }

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { ProtectedPlayer } from '@party/shared';
+import { ProtectedPlayerDetails } from '@party/shared';
 import { Observable } from 'rxjs';
 import { ApiResult, ApiService } from '../api.service';
 
@@ -17,7 +17,7 @@ export class PlayerService {
     return this.apiService.get<boolean>('/player/is-enrolled');
   }
 
-  public getDetails(): Observable<ApiResult<ProtectedPlayer>> {
-    return this.apiService.get<ProtectedPlayer>('/player/details');
+  public getDetails(): Observable<ApiResult<ProtectedPlayerDetails>> {
+    return this.apiService.get<ProtectedPlayerDetails>('/player/details');
   }
 }

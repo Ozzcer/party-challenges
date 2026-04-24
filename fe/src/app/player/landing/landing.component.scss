@@ -8,6 +8,7 @@
   flex-wrap: wrap;
   gap: 1rem;
 }
+
 .challenge-container {
   display: flex;
   flex-direction: row;
@@ -24,4 +25,36 @@
     min-width: 300px;
   }
 }
+
+.score-container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .score-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    @include outline;
+
+    .header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      width: 100%;
+      border-bottom: solid 1px var(--mat-sys-outline);
+    }
+
+    .score {
+      font-weight: bold;
+    }
+  }
+}
+
 // TODO more layout here, have challenges stack on left and titles on right on large enough screen

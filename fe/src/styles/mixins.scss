@@ -6,4 +6,5 @@
 
 @mixin outline {
     border: 1px solid var(--mat-sys-outline);
+    border-radius: 1rem;
 }
