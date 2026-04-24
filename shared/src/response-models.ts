@@ -13,13 +13,21 @@ import {
   ProtectedPlayer,
   ProtectedPlayerAttributeScore,
   ProtectedTitle,
+  ProtectedTitleRequirement,
 } from './protected.model';
 import { WithRequired } from './util.types';
 
+export interface ProtectedTitleDetails extends Omit<
+  ProtectedTitle,
+  'requirements'
+> {
+  requirements: WithRequired<ProtectedTitleRequirement, 'attribute'>[];
+}
 export interface Leaderboard {
-  players: WithRequired<ProtectedPlayer, 'playerAttributeScores'>[];
-  title: ProtectedTitle;
+  players: ProtectedPlayerDetails[];
+  title: ProtectedTitleDetails;
   currentPlayerPosition?: number;
+  currentPlayer: ProtectedPlayerDetails | null;
 }
 
 export type CurrentGameEvent = GameEvent & {

@@ -1,5 +1,6 @@
 import type {
   ProtectedTitle,
+  ProtectedTitleDetails,
   TitleRequirement,
   WithRequired,
 } from '@party/shared';
@@ -102,9 +103,15 @@ export async function getAllTitles(): Promise<
 
 export async function getTitleById(
   id: number,
-): Promise<WithRequired<ProtectedTitle, 'requirements'> | null> {
+): Promise<ProtectedTitleDetails | null> {
   return await prisma.title.findUnique({
     where: { id },
-    include: { requirements: true },
+    include: {
+      requirements: {
+        include: {
+          attribute: true,
+        },
+      },
+    },
   });
 }

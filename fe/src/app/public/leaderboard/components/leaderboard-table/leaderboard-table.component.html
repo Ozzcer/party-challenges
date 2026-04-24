@@ -1,24 +1,47 @@
 @let leaderboardData = leaderboard();
-<div style="display: flex; align-items: center">
-  <h2>{{ leaderboardData.title.name }} - {{ leaderboardData.title.name }}</h2>
-</div>
-<div>
-  @for (player of leaderboardData.players; track player.id; let index = $index) {
-    <div
-      style="display: flex; gap: 1rem"
-      class="{{ leaderboardData.currentPlayerPosition === $index + 1 ? 'current-player' : '' }}"
-    >
-      <span>{{ $index + 1 }}</span>
-      <span>{{ player.name }}</span>
+<div class="leaderboard">
+  <div class="header">
+    <h2>
+      {{ leaderboardData.title.description }}
+    </h2>
+    <div class="attributes">
+      @for (requirement of leaderboardData.title.requirements; track $index) {
+        @let attributeIcon = attributeIcons[requirement.attributeId];
+        <mat-icon
+          aria-hidden="false"
+          aria-label="{{ requirement.attribute.name }}"
+          fontIcon="{{ attributeIcon }}"
+          matTooltip="{{ requirement.attribute.name }}"
+        ></mat-icon>
+      }
     </div>
-  }
-  @if (
-    leaderboardData.currentPlayerPosition &&
-    leaderboardData.currentPlayerPosition > leaderboardData.players.length
-  ) {
-    <div style="display: flex; gap: 1rem" class="current-player">
-      <span>{{ leaderboardData.currentPlayerPosition }}</span>
-      <span>{{ user().name }}</span>
-    </div>
-  }
+  </div>
+  <div class="leaderboard-row-container">
+    @for (row of leaderboardRows(); track $index; let index = $index) {
+      <div class="leaderboard-row" [ngClass]="{ 'bg-success': row.currentPlayer }">
+        <span>
+          {{ row.position }}
+        </span>
+        <span>
+          {{ row.name }}
+        </span>
+
+        <div class="score-container">
+          @for (score of row.attributeScores; track score.id) {
+            @let attributeIcon = attributeIcons[score.attributeId];
+
+            <div class="score">
+              <mat-icon
+                aria-hidden="false"
+                aria-label="{{ score.attribute.name }}"
+                fontIcon="{{ attributeIcon }}"
+                matTooltip="{{ score.attribute.name }}"
+              ></mat-icon>
+              {{ score.score }}
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
 </div>

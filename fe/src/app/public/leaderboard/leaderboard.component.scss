@@ -1,0 +1,15 @@
+.leaderboard-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex-wrap: wrap;
+  .leaderboard {
+    min-width: 100%;
+    @media screen and (min-width: 350px) {
+      flex: 1;
+      min-width: 300px;
+    }
+
+  }
+}

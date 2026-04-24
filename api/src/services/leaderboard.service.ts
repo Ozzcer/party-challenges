@@ -1,8 +1,7 @@
 import type {
   Leaderboard,
-  ProtectedPlayer,
-  ProtectedTitle,
-  Title,
+  ProtectedPlayerDetails,
+  ProtectedTitleDetails,
   TitleRequirement,
 } from '@party/shared';
 import { prisma } from '../lib/prisma.lib';
@@ -12,9 +11,9 @@ const TOP_COUNT = 10;
 
 export async function getSingleAttributeLeaderboard(
   eventId: number,
-  title: Title,
+  title: ProtectedTitleDetails,
   requirement: TitleRequirement,
-  playerId?: number,
+  currentPlayer: ProtectedPlayerDetails | null,
 ): Promise<Leaderboard> {
   let currentPlayerPosition: number | undefined = undefined;
   const scores = await prisma.playerAttributeScore.findMany({
@@ -28,18 +27,24 @@ export async function getSingleAttributeLeaderboard(
           ...protectedPlayerSelect,
           playerAttributeScores: {
             where: { eventId },
+            include: {
+              attribute: true,
+            },
+            orderBy: {
+              attributeId: 'asc',
+            },
           },
         },
       },
     },
-    orderBy: {
-      score: 'desc',
-    },
+    orderBy: [{ score: 'desc' }, { updatedAt: 'asc' }],
     take: TOP_COUNT,
   });
 
-  if (playerId) {
-    const topIndex = scores.findIndex((score) => score.player.id === playerId);
+  if (currentPlayer) {
+    const topIndex = scores.findIndex(
+      (score) => score.player.id === currentPlayer.id,
+    );
     if (topIndex !== -1) {
       currentPlayerPosition = topIndex + 1;
     } else {
@@ -47,7 +52,7 @@ export async function getSingleAttributeLeaderboard(
         where: {
           playerId_attributeId_eventId: {
             attributeId: requirement.attributeId,
-            playerId,
+            playerId: currentPlayer.id,
             eventId,
           },
         },
@@ -57,11 +62,16 @@ export async function getSingleAttributeLeaderboard(
           where: {
             attributeId: requirement.attributeId,
             eventId: eventId,
-            score: { gt: playerScore.score },
+            OR: [
+              { score: { gt: playerScore.score } },
+              {
+                score: playerScore.score,
+                updatedAt: { lt: playerScore.updatedAt },
+              },
+            ],
           },
         });
         currentPlayerPosition = playersAbove + 1;
-        console.log(currentPlayerPosition);
       }
     }
   }
@@ -70,15 +80,16 @@ export async function getSingleAttributeLeaderboard(
     title,
     players: scores.map((score) => score.player),
     currentPlayerPosition,
+    currentPlayer,
   };
 }
 
 export async function getMultiAttributeLeaderboard(
   eventId: number,
-  title: ProtectedTitle,
+  title: ProtectedTitleDetails,
   requirements: TitleRequirement[],
-  playerId?: number,
-) {
+  currentPlayer: ProtectedPlayerDetails | null,
+): Promise<Leaderboard> {
   const scores = await prisma.playerAttributeScore.findMany({
     where: {
       attributeId: {
@@ -86,39 +97,59 @@ export async function getMultiAttributeLeaderboard(
       },
       eventId: eventId,
     },
-    include: { player: true },
+    include: {
+      player: {
+        select: {
+          ...protectedPlayerSelect,
+          playerAttributeScores: {
+            where: {
+              eventId,
+            },
+            include: {
+              attribute: true,
+            },
+            orderBy: {
+              attributeId: 'asc',
+            },
+          },
+        },
+      },
+    },
   });
 
   const playerTotals = new Map<
     number,
-    { total: number; player: (typeof scores)[0]['player'] }
+    { total: number; maxUpdatedAt: Date; player: (typeof scores)[0]['player'] }
   >();
   for (const score of scores) {
     const existing = playerTotals.get(score.playerId);
     if (existing) {
       existing.total += score.score;
+      if (score.updatedAt > existing.maxUpdatedAt) {
+        existing.maxUpdatedAt = score.updatedAt;
+      }
     } else {
       playerTotals.set(score.playerId, {
         total: score.score,
+        maxUpdatedAt: score.updatedAt,
         player: score.player,
       });
     }
   }
 
-  const sorted = [...playerTotals.values()].sort((a, b) => b.total - a.total);
+  const sorted = [...playerTotals.values()].sort(
+    (a, b) => b.total - a.total || a.maxUpdatedAt.getTime() - b.maxUpdatedAt.getTime(),
+  );
 
-  const players: ProtectedPlayer[] = sorted
-    .slice(0, TOP_COUNT)
-    .map(({ player }) => {
-      const { playerCode: _, ...protectedPlayer } = player;
-      return protectedPlayer;
-    });
+  const players = sorted.slice(0, TOP_COUNT).map((item) => item.player);
 
   let currentPlayerPosition: number | undefined;
-  if (playerId) {
-    const fullIndex = sorted.findIndex(({ player }) => player.id === playerId);
+  if (currentPlayer) {
+    const fullIndex = sorted.findIndex(
+      ({ player }) => player.id === currentPlayer.id,
+    );
     currentPlayerPosition = fullIndex !== -1 ? fullIndex + 1 : undefined;
   }
 
-  return { title, players, currentPlayerPosition };
+  return { title, players, currentPlayerPosition, currentPlayer };
 }

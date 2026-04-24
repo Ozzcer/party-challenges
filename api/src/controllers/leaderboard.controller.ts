@@ -7,6 +7,7 @@ import {
   getMultiAttributeLeaderboard,
   getSingleAttributeLeaderboard,
 } from '../services/leaderboard.service';
+import { getPlayerDetails } from '../services/player.service';
 import { getTitleById } from '../services/title.service';
 
 export async function getLeaderboardHandler(
@@ -20,13 +21,18 @@ export async function getLeaderboardHandler(
   const title = await getTitleById(request.params.id);
   if (!title) throw new AppError('No leaderboard found for this title', 404);
 
-  const playerId = request.user.role === 'player' ? request.user.id : undefined;
+
+  const currentPlayer =
+    request.user.role === 'player'
+      ? await getPlayerDetails(request.user.id)
+      : null;
+
   if (title.titleType === 'SINGLE_REQUIREMENT') {
     const leaderboard = await getSingleAttributeLeaderboard(
       currentEvent.id,
       title,
       title.requirements[0],
-      playerId,
+      currentPlayer,
     );
     reply.send(leaderboard);
   } else if (title.titleType === 'MULTI_REQUIREMENT_AVERAGE') {
@@ -34,7 +40,7 @@ export async function getLeaderboardHandler(
       currentEvent.id,
       title,
       title.requirements,
-      playerId,
+      currentPlayer,
     );
     reply.send(leaderboard);
   }

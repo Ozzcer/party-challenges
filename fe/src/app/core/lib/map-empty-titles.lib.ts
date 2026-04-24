@@ -7,7 +7,7 @@ export function mapEmptyTitles(titles: ApiResult<ProtectedTitle[]>): ApiResult<P
     titles.result = [
       {
         createdAt: new Date(),
-        description: 'The fooly foolerson',
+        description: 'We all begin our journey as The Fool',
         id: 0,
         imageUrl: '/images/fool.png',
         name: 'The Fool',

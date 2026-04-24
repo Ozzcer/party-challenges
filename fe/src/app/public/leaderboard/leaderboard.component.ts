@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { Router, RouterLink } from '@angular/router';
+import { User } from '@party/shared';
 import { combineLatest, filter, startWith, switchMap } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { LeaderboardService } from '../../core/services/public/leaderboard.service';
@@ -10,15 +12,17 @@ import { LeaderboardTableComponent } from './components/leaderboard-table/leader
 
 @Component({
   selector: 'app-leaderboard',
-  imports: [LeaderboardTableComponent, LoadingComponent, RouterLink],
+  imports: [LeaderboardTableComponent, LoadingComponent, RouterLink, MatButtonModule],
   templateUrl: './leaderboard.component.html',
   styleUrl: './leaderboard.component.scss',
 })
 export class LeaderboardComponent {
   private readonly leaderboardService = inject(LeaderboardService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
   private readonly titles$ = inject(PublicTitleService).getAllTitles();
 
-  public readonly user = toSignal(inject(AuthService).user$, { requireSync: true });
+  public readonly user = toSignal(this.authService.user$, { requireSync: true });
 
   public readonly leaderboards = toSignal(
     this.titles$.pipe(
@@ -32,4 +36,11 @@ export class LeaderboardComponent {
       ),
     ),
   );
+
+  logout(user: User): void {
+    const redirect = user.role === 'admin' ? '/admin/login' : '/login';
+    this.authService.logout().subscribe(() => {
+      this.router.navigateByUrl(redirect);
+    });
+  }
 }

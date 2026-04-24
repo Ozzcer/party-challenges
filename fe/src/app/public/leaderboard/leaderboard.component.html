@@ -1,17 +1,29 @@
-<h1>Leaderboards</h1>
-<a routerLink="/">Home</a>
-<!-- TODO user based home -->
-@let leaderboardSlots = leaderboards();
-@if (leaderboardSlots === undefined) {
-  <app-loading />
-} @else {
-  @for (slot of leaderboardSlots; track $index) {
-    @if (slot === undefined) {
-      <app-loading />
-    } @else if (slot.success) {
-      <app-leaderboard-table [leaderboard]="slot.result" [user]="user()" />
-    } @else {
-      <p>{{ slot.error.message }}</p>
+@let userData = user();
+<nav class="nav">
+  <a [routerLink]="userData.role === 'admin' ? '/admin' : '/'">
+    <img src="/images/logo-white.png" height="50" />
+    <span class="sm-hide">Arcana Sound</span>
+  </a>
+  <a routerLink="/public/leaderboard">Leaderboards</a>
+  <button type="button" (click)="logout(userData)" matButton="outlined">Logout</button>
+</nav>
+
+<div class="page-container">
+  @let leaderboardSlots = leaderboards();
+  @if (leaderboardSlots === undefined) {
+    <app-loading />
+  } @else {
+    <div class="leaderboard-container">
+
+    @for (slot of leaderboardSlots; track $index) {
+        @if (slot === undefined) {
+          <app-loading />
+        } @else if (slot.success) {
+          <app-leaderboard-table class="leaderboard" [leaderboard]="slot.result" [user]="user()" />
+        } @else {
+          <p>{{ slot.error.message }}</p>
+        }
     }
+    </div>
   }
-}
+</div>
