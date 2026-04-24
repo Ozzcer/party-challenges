@@ -1,11 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './admin-login.component.html',
   styleUrl: './admin-login.component.scss',
 })
@@ -18,7 +21,7 @@ export class AdminLoginComponent {
     password: new FormControl('', Validators.required),
   });
 
-  result = signal('');
+  error = signal('');
 
   login(): void {
     if (this.form.invalid) return;
@@ -29,7 +32,7 @@ export class AdminLoginComponent {
       if (res.success) {
         this.router.navigateByUrl('/admin');
       } else {
-        this.result.set(res.error.message);
+        this.error.set(res.error.message);
       }
     });
   }
