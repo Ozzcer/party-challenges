@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MatAnchor } from '@angular/material/button';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { map, switchMap } from 'rxjs';
 import { AdminPlayerService } from '../../../core/services/admin/admin-player.service';
@@ -8,7 +9,7 @@ import { LoadSignalDirective } from '../../../shared/directives/load-signal.dire
 
 @Component({
   selector: 'app-player',
-  imports: [LoadSignalDirective, RouterLink, TitleComponent],
+  imports: [LoadSignalDirective, RouterLink, TitleComponent, MatAnchor],
   templateUrl: './player.component.html',
   styleUrl: './player.component.scss',
 })
