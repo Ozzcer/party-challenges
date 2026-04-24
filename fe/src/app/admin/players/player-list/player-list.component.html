@@ -1,36 +1,52 @@
-<section>
-  <h1>Active Players</h1>
-  <form [formGroup]="filterForm" (submit)="setFilter()">
-    <label>
-      Search by name
-      <input formControlName="name" placeholder="Name">
-    </label>
-    <button type="submit">Search</button>
-    <button type="reset" (click)="resetFilter()" [disabled]="!filterForm.dirty">Reset</button>
-  </form>
-  <ng-container *appLoadSignal="players(); let players">
-    @for (player of players; track player.id) {
-      <a routerLink="{{ player.id }}">
-        <p>{{ player.name }}</p>
-        <p>{{ player.playerCode }}</p>
-      </a>
-    } @empty {
-      <p>No active players</p>
-    }
-  </ng-container>
-</section>
-<!-- TODO some kind of pagination? -->
-<section>
-  <h1>Unused Player Codes</h1>
-  <ng-container *appLoadSignal="unusedPlayerCodes(); let unusedPlayerCodes">
-    @if (unusedPlayerCodes.length > 0) {
-      <ul>
-        @for (code of unusedPlayerCodes; track code) {
-          <li>{{code}}</li>
-        }
-      </ul>
-    } @else {
-      <p>No unused player codes</p>
-    }
-  </ng-container>
-</section>
+<div class="page-container">
+  <div class="wrap-container">
+    <section class="section">
+      <h1>Active Players</h1>
+      <form class="player-search-form" [formGroup]="filterForm" (submit)="setFilter()">
+        <mat-form-field subscriptSizing="dynamic">
+          <mat-label> Search by name</mat-label>
+          <input type="text" formControlName="name" placeholder="Name" matInput />
+        </mat-form-field>
+        <div class="buttons">
+          <button type="submit" matButton="outlined" [disabled]="!filterForm.valid">Search</button>
+          <button
+            type="reset"
+            (click)="resetFilter()"
+            [disabled]="!filterForm.dirty"
+            matButton="outlined"
+          >
+            Reset
+          </button>
+        </div>
+      </form>
+      <div class="player-list">
+        <ng-container *appLoadSignal="players(); let players">
+          @for (player of players; track player.id) {
+            <a routerLink="{{ player.id }}">
+              <span>{{ player.name }} | {{ player.playerCode }}</span>
+            </a>
+          } @empty {
+            <p>No active players</p>
+          }
+        </ng-container>
+      </div>
+    </section>
+    <!-- TODO some kind of pagination? -->
+    <section class="section">
+      <h1>Unused Player Codes</h1>
+      <div class="player-list">
+        <ng-container *appLoadSignal="unusedPlayerCodes(); let unusedPlayerCodes">
+          @if (unusedPlayerCodes.length > 0) {
+            <ul>
+              @for (code of unusedPlayerCodes; track code) {
+                <li>{{ code }}</li>
+              }
+            </ul>
+          } @else {
+            <p>No unused player codes</p>
+          }
+        </ng-container>
+      </div>
+    </section>
+  </div>
+</div>
