@@ -24,8 +24,6 @@ API runs on `localhost:3000`, FE on `localhost:4200` (proxied to API via `/api`)
 - [`docs/data-models.md`](docs/data-models.md) — Prisma data models
 
 ## TODO
-- add search by name for admins
-- player pages
-- leaderboard
+- styling / logos / images
 - Add admin + player layout to not found if logged in?
 - move images out of project
