@@ -1,11 +1,19 @@
 import { FastifyInstance } from 'fastify';
-import { getLeaderboardsHandler } from '../controllers/leaderboard.controller';
+import { getLeaderboardHandler } from '../controllers/leaderboard.controller';
+import { getAllTitlesHandler } from '../controllers/title.controller';
 import { publicAuthGuard } from '../hooks/public-auth.guard';
+import { leaderboardTitleIdSchema } from '../schema/leaderboard.schema';
 
 export async function publicRoutes(fastify: FastifyInstance): Promise<void> {
-  fastify.register(async (playerFastify) => {
-    playerFastify.addHook('preHandler', publicAuthGuard);
+  fastify.register(async (publicFastify) => {
+    publicFastify.addHook('preHandler', publicAuthGuard);
 
-    playerFastify.get('/leaderboards', getLeaderboardsHandler);
+    publicFastify.get(
+      '/leaderboards/:id',
+      { schema: { params: leaderboardTitleIdSchema } },
+      getLeaderboardHandler,
+    );
+
+    publicFastify.get('/titles', getAllTitlesHandler);
   });
 }

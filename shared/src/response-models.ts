@@ -5,19 +5,19 @@ import {
   GameEvent,
   Player,
   PlayerAttributeScore,
-  Title,
 } from './generated';
 import {
   ProtectedChallenge,
   ProtectedChallengeInstance,
   ProtectedChallengeParticipant,
   ProtectedPlayer,
+  ProtectedTitle
 } from './protected.model';
 import { WithRequired } from './util.types';
 
 export interface Leaderboard {
-  players: ProtectedPlayer[];
-  title: Title;
+  players: WithRequired<ProtectedPlayer, 'playerAttributeScores'>[];
+  title: ProtectedTitle;
   currentPlayerPosition?: number;
 }
 

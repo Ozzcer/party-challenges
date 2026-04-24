@@ -1,7 +1,17 @@
-
 <h1>Leaderboards</h1>
-<ng-container *appLoadSignal="leaderboards(); let leaderboards">
-  @for (leaderboard of leaderboards; track leaderboard.title.id) {
-    <app-leaderboard-table [leaderboard]="leaderboard" [user]="user()"></app-leaderboard-table>
+<a routerLink="/">Home</a>
+<!-- TODO user based home -->
+@let leaderboardSlots = leaderboards();
+@if (leaderboardSlots === undefined) {
+  <app-loading />
+} @else {
+  @for (slot of leaderboardSlots; track $index) {
+    @if (slot === undefined) {
+      <app-loading />
+    } @else if (slot.success) {
+      <app-leaderboard-table [leaderboard]="slot.result" [user]="user()" />
+    } @else {
+      <p>{{ slot.error.message }}</p>
+    }
   }
-</ng-container>
+}

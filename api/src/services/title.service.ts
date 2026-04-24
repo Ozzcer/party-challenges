@@ -1,4 +1,8 @@
-import type { ProtectedTitle, TitleRequirement } from '@party/shared';
+import type {
+  ProtectedTitle,
+  TitleRequirement,
+  WithRequired,
+} from '@party/shared';
 import { prisma } from '../lib/prisma.lib';
 import { getCurrentGameEvent } from './game-event.service';
 
@@ -88,4 +92,19 @@ export async function getEarnedTitles(
   );
 
   return results.filter(({ earned }) => earned).map(({ title }) => title);
+}
+
+export async function getAllTitles(): Promise<
+  WithRequired<ProtectedTitle, 'requirements'>[]
+> {
+  return await prisma.title.findMany({ include: { requirements: true } });
+}
+
+export async function getTitleById(
+  id: number,
+): Promise<WithRequired<ProtectedTitle, 'requirements'> | null> {
+  return await prisma.title.findUnique({
+    where: { id },
+    include: { requirements: true },
+  });
 }

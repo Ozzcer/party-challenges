@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import type { Leaderboard } from '@party/shared';
+import { Observable } from 'rxjs';
 import { ApiResult, ApiService } from '../api.service';
 
 @Injectable({
@@ -11,5 +11,9 @@ export class LeaderboardService {
 
   public getLeaderboards(): Observable<ApiResult<Leaderboard[]>> {
     return this.apiService.get<Leaderboard[]>(`/public/leaderboards`);
+  }
+
+  public getLeaderboardByTitleId(id: number): Observable<ApiResult<Leaderboard>> {
+    return this.apiService.get<Leaderboard>(`/public/leaderboards/${id}`);
   }
 }
