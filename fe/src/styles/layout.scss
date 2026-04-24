@@ -1,11 +1,46 @@
-.page-container-center {
+@use 'mixins' as *;
+
+.page-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  width: 100vw;
   gap: 1rem;
+  padding: 1rem;
+
+  .wrap-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    @include medium {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    & > * {
+      flex-grow: 1;
+    }
+  }
+
+  &.center {
+    height: 100vh;    
+  }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    padding: 1rem;
+    @include outline;
+    width: 100%;
+    @include medium {
+      width: revert;
+    }
+
+  }
 }
 
 .flex {

@@ -1,0 +1,51 @@
+@use 'mixins' as *;
+
+.challenge-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: var(--mat-sys-surface-container);
+  border-radius: 1rem;
+  @include outline;
+  padding: 0.5rem;
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    width: 100%;
+    gap: 1rem;
+
+    .info-container {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+    }
+  }
+
+  .table-header {
+    justify-content: center;
+  }
+
+  .player-table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    @include outline;
+    border-radius: 1rem;
+    overflow: hidden;
+
+    .player {
+      width: 100%;
+      padding: 0.5rem;
+
+      &:not(:last-child) {
+        border-bottom: solid 1px var(--mat-sys-outline);
+      }
+    }
+  }
+}

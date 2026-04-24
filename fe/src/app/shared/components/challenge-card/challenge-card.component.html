@@ -1,21 +1,39 @@
 @let challengeData = challenge();
-<p>
-  {{ challengeData.challenge.attribute.name }} | {{ challengeData.challenge.type | titlecase }} |
-  {{ challengeData.challenge.description }} 
-</p>
-<ul>
-  @for (participant of challengeData.participants; track participant.id) {
-    <li>
-      @if (participant.playerId === userId()) {
-        You
-      } @else {
-        {{ participant.player.name }}
-      }
-      @if (participant.status === 'FAILED') {
-        - Failed
-      } @else if (participant.status === 'COMPLETED') {
-        - Winner!
-      }
-    </li>
-  }
-</ul>
+@let attribute = challengeData.challenge.attribute;
+@let attributeIcon = attributeIcons[attribute.id];
+
+<div class="challenge-card">
+  <div class="header">
+    <div class="info-container">
+      <mat-icon
+        aria-hidden="false"
+        aria-label="{{ challengeData.challenge.attribute.name }}"
+        fontIcon="{{ attributeIcon }}"
+        matTooltip="{{ attribute.name }}"
+      ></mat-icon>
+      <span>{{ challengeData.challenge.type | titlecase }}</span>
+      <span>Score: {{ challengeData.challenge.score }}</span>
+    </div>
+    <span class="description"> {{ challengeData.challenge.description }} </span>
+  </div>
+  <span class="table-header">Players</span>
+  <div class="player-table">
+    @for (participant of challengeData.participants; track participant.id) {
+      @let statusClass = statusClasses[participant.status];
+      <span class="player {{statusClass}}">
+        @if (participant.playerId === userId()) {
+          You
+        } @else {
+          {{ participant.player.name }}
+        }
+        @if (participant.status === 'FAILED') {
+          - Failed
+        } @else if (participant.status === 'COMPLETED') {
+          - Winner!
+        }
+      </span>
+    }
+  </div>
+  <ul>
+  </ul>
+</div>

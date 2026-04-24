@@ -1,6 +1,8 @@
+@use 'mixins' as *;
+
 .sm-hide {
   display: none;
-  @media (min-width: 600px) {
+  @include medium {
     display: revert;
   }
 }

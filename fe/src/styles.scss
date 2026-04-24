@@ -53,11 +53,23 @@ html {
   --mat-sys-on-error: #0a0a0a;
   --mat-sys-error-container: #3a0000;
   --mat-sys-on-error-container: #ff5555;
+
+  --color-success: #4ade80;
+  --color-on-success: #0a0a0a;
+  --color-success-container: #052e16;
+  --color-on-success-container: #4ade80;
+}
+
+.bg-success {
+  background-color: var(--color-success-container);
+}
+
+.bg-error {
+  background-color: var(--mat-sys-error-container);
 }
 
 body {
   color-scheme: dark;
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
 }

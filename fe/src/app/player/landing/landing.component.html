@@ -1,31 +1,38 @@
 @let userDetails = user();
-<h1>Welcome {{ userDetails.name }} | Player Code: {{ userDetails.playerCode }}</h1>
-<section>
-  <h2>Your Titles</h2>
-  <div style="display: flex; flex-wrap: wrap">
-    <ng-container *appLoadSignal="titles(); let titles">
-      @for (title of titles; track title.id) {
-        <app-title [title]="title"> </app-title>
-      }
-    </ng-container>
+<div class="page-container">
+  <h1>Welcome {{ userDetails.name }} | {{ userDetails.playerCode }}</h1>
+  <div class="wrap-container">
+    <section class="section">
+      <h2>Current Challenge</h2>
+      <ng-container *appLoadSignal="currentChallenge(); let currentChallenge">
+        <app-challenge-card
+          class="challenge"
+          [userId]="userDetails.id"
+          [challenge]="currentChallenge"
+        ></app-challenge-card>
+      </ng-container>
+    </section>
+    <section class="section">
+      <h2>Your Titles</h2>
+      <div class="title-container">
+        <ng-container *appLoadSignal="titles(); let titles">
+          @for (title of titles; track title.id) {
+            <app-title class="title" [title]="title"> </app-title>
+          }
+        </ng-container>
+      </div>
+    </section>
   </div>
-</section>
-<section>
-  <h2>Current Challenge</h2>
-  <ng-container *appLoadSignal="currentChallenge(); let currentChallenge">
-    <app-challenge-card
-      [userId]="userDetails.id"
-      [challenge]="currentChallenge"
-    ></app-challenge-card>
-  </ng-container>
-</section>
-<section>
-  <h2>Completed Challenges</h2>
-  <ng-container *appLoadSignal="challenges(); let challenges">
-    @for (challenge of challenges; track challenge.id) {
-      <app-challenge-card [userId]="userDetails.id" [challenge]="challenge"></app-challenge-card>
-    } @empty {
-      <p>No challenges completed yet.</p>
-    }
-  </ng-container>
-</section>
+  <section class="section">
+    <h2>Completed Challenges</h2>
+    <div class="challenge-container">
+      <ng-container *appLoadSignal="challenges(); let challenges">
+        @for (challenge of challenges; track challenge.id) {
+          <app-challenge-card class="challenge" [userId]="userDetails.id" [challenge]="challenge"></app-challenge-card>
+        } @empty {
+          <p>No challenges completed yet.</p>
+        }
+      </ng-container>
+    </div>
+  </section>
+</div>

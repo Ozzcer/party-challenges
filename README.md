@@ -27,3 +27,4 @@ API runs on `localhost:3000`, FE on `localhost:4200` (proxied to API via `/api`)
 - styling / logos / images / favicon
 - Add admin + player layout to not found if logged in?
 - move images out of project
+- move icon for stat to db
