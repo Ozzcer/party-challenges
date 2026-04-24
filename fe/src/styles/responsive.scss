@@ -1,0 +1,6 @@
+.sm-hide {
+  display: none;
+  @media (min-width: 600px) {
+    display: revert;
+  }
+}

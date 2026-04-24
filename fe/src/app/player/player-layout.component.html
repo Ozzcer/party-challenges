@@ -1,7 +1,10 @@
-<nav>
-  <a routerLink="/">Home</a>
+<nav class="nav">
+  <a routerLink="/">
+    <img src="/images/logo-white.png" height="50" />
+    <span class="sm-hide">Arcana</span>
+  </a>
   <a routerLink="/public/leaderboard">Leaderboard</a>
-  <button type="button" (click)="logout()">Logout</button>
+  <button type="button" (click)="logout()" matButton="outlined">Logout</button>
 </nav>
 
 <router-outlet />
