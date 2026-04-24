@@ -21,6 +21,19 @@
     font-size: 1.5rem;
     cursor: pointer;
   }
-  
+
   @include mat.form-field-density(-3);
+}
+
+.title-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .title {
+    max-width: 140px;
+  }
 }

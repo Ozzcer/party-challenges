@@ -1,18 +1,5 @@
 @use 'mixins' as *;
 
-.title-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-
-  .title {
-    max-width: 140px;
-  }
-}
-
 .challenge-container {
   display: flex;
   flex-direction: row;
