@@ -35,7 +35,9 @@ export class PlayerListComponent {
       if (!players.success || !filter) return players;
       return {
         ...players,
-        result: players.result.filter((player) => player.name?.includes(filter)),
+        result: players.result.filter((player) =>
+          player.name?.toLowerCase().includes(filter.toLowerCase()),
+        ),
       };
     }),
   );
