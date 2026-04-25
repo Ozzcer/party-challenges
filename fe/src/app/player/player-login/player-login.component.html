@@ -3,8 +3,8 @@
   <h1>Arcana Sound</h1>
   <form class="flex column" [formGroup]="form" (ngSubmit)="login()">
     <mat-form-field>
-      <mat-label>Player Code</mat-label>
-      <input formControlName="playerCode" type="text" placeholder="Player code" matInput />
+      <mat-label>Citizen ID</mat-label>
+      <input formControlName="playerCode" type="text" placeholder="Citizen ID" matInput />
     </mat-form-field>
     <button type="submit" [disabled]="form.invalid" matButton="outlined">Login</button>
     <span class="error-text">
