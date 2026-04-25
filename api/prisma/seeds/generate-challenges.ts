@@ -77,33 +77,34 @@ async function seedChallenges() {
       attributeId: 2,
       description: 'Hold a plank for the longest',
       type: 'ADVERSARIAL' as const,
-      score: 2,
+      score: 1,
     },
     {
       attributeId: 2,
       description: 'Compliment battle',
       type: 'ADVERSARIAL' as const,
-      score: 2,
+      score: 1,
     },
     {
       attributeId: 2,
       description: 'Hardest punch bag hit',
       type: 'ADVERSARIAL' as const,
-      score: 2,
+      score: 1,
     },
     {
       attributeId: 2,
-      description:  'Staring contest',
+      description: 'Staring contest',
       type: 'ADVERSARIAL' as const,
-      score: 2,
+      score: 1,
     },
     {
       attributeId: 2,
-      description:  'Who can do the most of an activity of their choosing (i.e Press ups, star jumps, etc)',
+      description:
+        'Who can do the most of an activity of their choosing (i.e Press ups, star jumps, etc)',
       type: 'ADVERSARIAL' as const,
-      score: 2,
+      score: 1,
     },
-  ]
+  ];
 
   const wisdomChallenges: ChallengeCreateData[] = [
     {
@@ -146,7 +147,7 @@ async function seedChallenges() {
       attributeId: 3,
       description: 'Quickest answer to a maths question',
       type: 'ADVERSARIAL' as const,
-      score: 2,
+      score: 1,
     },
     {
       attributeId: 3,
