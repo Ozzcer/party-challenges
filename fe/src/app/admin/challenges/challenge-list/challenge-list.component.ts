@@ -164,12 +164,13 @@ export class ChallengeListComponent {
   public addPlayer(): void {
     const { playerCode } = this.addPlayerForm.getRawValue();
     if (!playerCode) return;
+    this.resetOutputs();
     this.addPlayerCodeSubject.next(playerCode);
     this.addPlayerForm.reset();
   }
 
   public removePlayer(playerId: number): void {
-    this.addResult.set('');
+    this.resetOutputs();
     this.removePlayerIdSubject.next(playerId);
   }
 
@@ -189,6 +190,12 @@ export class ChallengeListComponent {
           ? this.assignResult.set(res.result)
           : this.assignError.set({ error: res.error.message, id: challengeId }),
       );
+  }
+
+  private resetOutputs(): void {
+    this.addResult.set('');
+    this.assignError.set(null);
+    this.assignResult.set(null);
   }
 }
 
