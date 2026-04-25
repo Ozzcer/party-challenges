@@ -12,7 +12,6 @@ async function main() {
   await seedAttributes();
   await seedChallenges();
   await seedAdmins();
-  await seedPlayers();
   await seedTitles();
 }
 main()
@@ -94,31 +93,6 @@ async function seedAdmins() {
   });
 }
 
-async function seedPlayers() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const usedCodes = new Set<string>();
-
-  function generatePlayerCode(): string {
-    let code: string;
-    do {
-      code = Array.from(
-        { length: 5 },
-        () => chars[Math.floor(Math.random() * chars.length)],
-      ).join('');
-    } while (usedCodes.has(code));
-    usedCodes.add(code);
-    return code;
-  }
-
-  for (let i = 0; i < 100; i++) {
-    const player = await prisma.player.create({
-      data: { playerCode: generatePlayerCode() },
-    });
-    if (i === 0) {
-      console.log(`First player created: ${player.playerCode}`);
-    }
-  }
-}
 
 async function seedTitles() {
   const titles: TitleCreateInput[] = [
