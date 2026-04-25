@@ -8,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AdminPlayerService } from '../core/services/admin/admin-player.service';
 import { AuthService } from '../core/services/auth.service';
+import { LoadingService } from '../core/services/loading.service';
 @Component({
   selector: 'app-admin-layout',
   imports: [
@@ -27,6 +28,7 @@ export class AdminLayoutComponent {
   private readonly authService = inject(AuthService);
   private readonly adminPlayerService = inject(AdminPlayerService);
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
 
   protected readonly searchForm = new FormGroup({
     playerCode: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -34,6 +36,7 @@ export class AdminLayoutComponent {
   protected readonly searchError = signal<string | null>(null);
 
   logout(): void {
+    this.loadingService.showLoader();
     this.authService.logout().subscribe(() => {
       this.router.navigateByUrl('/admin/login');
     });
@@ -42,9 +45,11 @@ export class AdminLayoutComponent {
   searchByCode(): void {
     const code = this.searchForm.controls.playerCode.value.trim();
     if (!code) return;
+    this.loadingService.showLoader();
 
     this.searchError.set(null);
     this.adminPlayerService.getPlayerIdByCode(code).subscribe((result) => {
+      this.loadingService.hideLoader();
       if (result.success) {
         this.searchForm.reset();
         this.router.navigateByUrl('/admin/players/' + result.result);

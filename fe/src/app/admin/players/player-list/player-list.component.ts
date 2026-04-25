@@ -48,7 +48,6 @@ export class PlayerListComponent {
 
   public setFilter(): void {
     this.nameFilterSubject.next(this.filterForm.getRawValue().name);
-    console.log(this.nameFilterSubject.value);
   }
 
   public resetFilter(): void {

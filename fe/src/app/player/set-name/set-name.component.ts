@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import { LoadingService } from '../../core/services/loading.service';
 import { PlayerService } from '../../core/services/player/player.service';
 
 @Component({
@@ -15,6 +16,7 @@ import { PlayerService } from '../../core/services/player/player.service';
 export class SetNameComponent {
   private readonly playerService = inject(PlayerService);
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
 
   form = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -24,9 +26,8 @@ export class SetNameComponent {
 
   submit(): void {
     if (this.form.invalid) return;
-
+    this.loadingService.showLoader();
     this.playerService.setName(this.form.value.name!).subscribe((res) => {
-      console.log('here', res);
       if (res.success) {
         this.router.navigateByUrl('/');
       } else {

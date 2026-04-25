@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { LoadingService } from '../../core/services/loading.service';
 
 @Component({
   selector: 'app-player-login',
@@ -15,6 +16,7 @@ import { AuthService } from '../../core/services/auth.service';
 export class PlayerLoginComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
 
   form = new FormGroup({
     playerCode: new FormControl('', Validators.required),
@@ -24,7 +26,7 @@ export class PlayerLoginComponent {
 
   login(): void {
     if (this.form.invalid) return;
-
+    this.loadingService.showLoader();
     this.authService.publicLogin(this.form.value.playerCode!).subscribe((res) => {
       if (res.success) {
         this.router.navigateByUrl('/');

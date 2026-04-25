@@ -6,6 +6,7 @@ import { ProtectedPlayer } from '@party/shared';
 import { filter, map, shareReplay, switchMap } from 'rxjs';
 import { AdminChallengeService } from '../../../core/services/admin/admin-challenge.service';
 import { DialogService } from '../../../core/services/dialog.service';
+import { LoadingService } from '../../../core/services/loading.service';
 import { LoadSignalDirective } from '../../../shared/directives/load-signal.directive';
 
 @Component({
@@ -18,6 +19,7 @@ export class ResolveChallengeComponent {
   private readonly document = inject(DOCUMENT);
   private readonly challengeService = inject(AdminChallengeService);
   private readonly dialogService = inject(DialogService);
+  private readonly loadingService = inject(LoadingService);
   private readonly challengeInstance$ = inject(ActivatedRoute).paramMap.pipe(
     switchMap((paramMap) => {
       const id = Number(paramMap.get('id'));
@@ -39,6 +41,7 @@ export class ResolveChallengeComponent {
       `Are you sure ${player.name} is the winner?`,
     );
     if (!confirm) return;
+    this.loadingService.showLoader();
     this.challengeService
       .resolveChallengeInstance(challengeInstanceId, {
         winningPlayer: player.id,
@@ -54,6 +57,7 @@ export class ResolveChallengeComponent {
       `Are you sure you wish to mark this challenge as failed?`,
     );
     if (!confirm) return;
+    this.loadingService.showLoader();
     this.challengeService
       .resolveChallengeInstance(challengeInstanceId, { status: 'FAILED' })
       .subscribe((res) =>

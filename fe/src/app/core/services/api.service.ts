@@ -1,7 +1,8 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
 import { ApiError, isApiError } from '@party/shared';
+import { catchError, finalize, map, Observable, of } from 'rxjs';
+import { LoadingService } from './loading.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,7 @@ import { ApiError, isApiError } from '@party/shared';
 export class ApiService {
   private readonly API_ENDPOINT = '/api';
   private readonly http = inject(HttpClient);
+  private readonly loadingService = inject(LoadingService);
 
   public get<T>(path: string): Observable<ApiResult<T>> {
     return this.applyPipes(this.http.get<T>(this.API_ENDPOINT + path));
@@ -22,6 +24,7 @@ export class ApiService {
     return request.pipe(
       map((result) => this.mapResult(result)),
       catchError((err): Observable<ApiResult<T>> => this.handleError(err)),
+      finalize(() => this.loadingService.hideLoader()),
     );
   }
 
@@ -52,13 +55,14 @@ export class ApiService {
   }
 }
 
-export type ApiResult<T> = {
-  success: true;
-  result: T
-  error: null;
-} | {
-  success: false;
-  result: null;
-  error: ApiError;
-}
-
+export type ApiResult<T> =
+  | {
+      success: true;
+      result: T;
+      error: null;
+    }
+  | {
+      success: false;
+      result: null;
+      error: ApiError;
+    };

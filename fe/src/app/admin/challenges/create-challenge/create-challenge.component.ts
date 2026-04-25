@@ -10,10 +10,17 @@ import { ChallengeType } from '@party/shared';
 import { firstValueFrom } from 'rxjs';
 import { AdminChallengeService } from '../../../core/services/admin/admin-challenge.service';
 import { DialogService } from '../../../core/services/dialog.service';
+import { LoadingService } from '../../../core/services/loading.service';
 
 @Component({
   selector: 'app-create-challenge',
-  imports: [ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+  ],
   templateUrl: './create-challenge.component.html',
   styleUrl: './create-challenge.component.scss',
 })
@@ -23,6 +30,7 @@ export class CreateChallengeComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly loadingService = inject(LoadingService);
 
   public readonly challengeTypes: ChallengeType[] = ['SOLO', 'ADVERSARIAL'];
 
@@ -44,7 +52,7 @@ export class CreateChallengeComponent {
       'Are you sure you wish to create this challenge?',
     );
     if (!confirmed) return;
-
+    this.loadingService.showLoader();
     const value = this.form.getRawValue();
     const result = await firstValueFrom(
       this.challengeService.createChallenge({

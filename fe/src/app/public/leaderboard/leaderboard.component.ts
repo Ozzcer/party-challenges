@@ -5,6 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { User } from '@party/shared';
 import { combineLatest, filter, startWith, switchMap } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import { LoadingService } from '../../core/services/loading.service';
 import { LeaderboardService } from '../../core/services/public/leaderboard.service';
 import { PublicTitleService } from '../../core/services/public/public-title.service';
 import { LoadingComponent } from '../../shared/components/loading/loading.component';
@@ -21,6 +22,7 @@ export class LeaderboardComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly titles$ = inject(PublicTitleService).getAllTitles();
+  private readonly loadingService = inject(LoadingService);
 
   public readonly user = toSignal(this.authService.user$, { requireSync: true });
 
@@ -39,6 +41,7 @@ export class LeaderboardComponent {
 
   logout(user: User): void {
     const redirect = user.role === 'admin' ? '/admin/login' : '/login';
+    this.loadingService.showLoader();
     this.authService.logout().subscribe(() => {
       this.router.navigateByUrl(redirect);
     });
