@@ -146,9 +146,15 @@ async function seedChallenges() {
       attributeId: 3,
       description: 'Quickest answer to a maths question',
       type: 'ADVERSARIAL' as const,
+      score: 2,
+    },
+    {
+      attributeId: 3,
+      description: 'Create a cocktail for us to review',
+      type: 'SOLO',
       score: 1,
     },
-  ]
+  ];
 
   const challenges = [
     ...whimsyChallenges,
