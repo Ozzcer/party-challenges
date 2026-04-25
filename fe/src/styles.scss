@@ -4,7 +4,39 @@
 @use 'styles/layout.scss';
 @use 'styles/responsive.scss';
 
+@font-face {
+  font-family: "Akira";
+  src: url("/fonts/akira.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Akira-Light";
+  src: url("/fonts/akira.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+h1 {
+  font-family:
+    'Akira', 'Syne', 'Arial Black', Impact, Haettenschweiler, 'Segoe UI', Roboto, Arial, sans-serif;
+    letter-spacing: 0.1rem;
+}
+
+h2 {
+  font-family:
+    'Akira-Light', 'Syne', 'Arial Black', Impact, Haettenschweiler, 'Segoe UI', Roboto, Arial, sans-serif;
+    letter-spacing: 0.1rem;
+}
+
 html {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    Courier, monospace;
+
   background-color: #0a0a0a;
   color: #e0e0e0;
   height: 100%;
@@ -14,7 +46,7 @@ html {
         primary: mat.$azure-palette,
         tertiary: mat.$azure-palette,
       ),
-      typography: Roboto,
+      typography: monospace,
       density: 0,
     )
   );
