@@ -156,5 +156,7 @@ async function seedChallenges() {
     ...wisdomChallenges,
   ]
 
-  await prisma.challenge.createMany({data: challenges})
+  await prisma.challenge.deleteMany();
+  await prisma.challenge.createMany({ data: challenges });
+  console.log('Challenges generated');
 }
