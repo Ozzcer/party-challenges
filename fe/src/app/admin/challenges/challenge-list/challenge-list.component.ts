@@ -104,6 +104,10 @@ export class ChallengeListComponent {
     2: new FormControl<boolean>(false, { nonNullable: true }),
     3: new FormControl<boolean>(false, { nonNullable: true }),
   });
+  public readonly typeFilterForm = new FormGroup({
+    SOLO: new FormControl<boolean>(false, { nonNullable: true }),
+    ADVERSARIAL: new FormControl<boolean>(false, { nonNullable: true }),
+  });
   public readonly addPlayerForm = new FormGroup({
     playerCode: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
   });
@@ -119,13 +123,30 @@ export class ChallengeListComponent {
           3: false,
         } as Partial<{ [x: number]: boolean }>),
       ),
+      typeForm: this.typeFilterForm.valueChanges.pipe(
+        startWith({
+          SOLO: false,
+          ADVERSARIAL: false,
+        }),
+      ),
       challengesResult: this.challenges$,
     }).pipe(
-      map(({ form, challengesResult }) => {
+      map(({ form, typeForm, challengesResult }) => {
         const filterSet = Object.values(form).some((val) => val);
+        const typeFilterSet = Object.values(typeForm).some((val) => val);
         if (challengesResult.success && filterSet) {
           const filteredChallenges = challengesResult.result.filter((challenge) => {
             return form[challenge.attributeId] === true;
+          });
+
+          challengesResult = {
+            ...challengesResult,
+            result: filteredChallenges,
+          };
+        }
+        if (challengesResult.success && typeFilterSet) {
+          const filteredChallenges = challengesResult.result.filter((challenge) => {
+            return typeForm[challenge.type] === true;
           });
 
           challengesResult = {
