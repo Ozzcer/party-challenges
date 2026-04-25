@@ -36,7 +36,7 @@ export async function authRoutes(fastify: FastifyInstance): Promise<void> {
       request: FastifyRequest<{ Body: FromSchema<typeof playerLoginSchema> }>,
       reply: FastifyReply,
     ): Promise<void> => {
-      const { playerCode } = request.body;
+      const playerCode = request.body.playerCode.toUpperCase();
 
       const player = await playerLogin(playerCode);
       if (!player) {
