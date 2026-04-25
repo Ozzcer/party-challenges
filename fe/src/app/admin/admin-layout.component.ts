@@ -43,7 +43,7 @@ export class AdminLayoutComponent {
   }
 
   searchByCode(): void {
-    const code = this.searchForm.controls.playerCode.value.trim();
+    const code = this.searchForm.controls.playerCode.value.trim().toUpperCase();
     if (!code) return;
     this.loadingService.showLoader();
 

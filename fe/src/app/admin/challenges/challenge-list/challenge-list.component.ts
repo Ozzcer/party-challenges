@@ -164,7 +164,7 @@ export class ChallengeListComponent {
   }
 
   public addPlayer(): void {
-    const { playerCode } = this.addPlayerForm.getRawValue();
+    const playerCode = this.addPlayerForm.getRawValue().playerCode?.trim().toUpperCase();
     if (!playerCode) return;
     this.resetOutputs();
     this.addPlayerCodeSubject.next(playerCode);
