@@ -140,7 +140,7 @@ async function seedChallenges() {
     {
       attributeId: 3,
       description: 'Create a spaghetti tower',
-      type: 'SOLO' as const,
+      type: 'ADVERSARIAL' as const,
       score: 1,
     },
     {

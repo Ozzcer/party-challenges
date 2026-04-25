@@ -95,7 +95,7 @@ export async function resolveInstanceHandler(
   if (!instance) throw new AppError('Challenge instance not found', 404);
 
   if (request.body.status === 'COMPLETED') {
-    await resolveInstanceAsCompleted(instance, request.body.winningPlayer);
+    await resolveInstanceAsCompleted(instance, request.body.winningPlayers);
   } else {
     await resolveInstanceAsFailed(instance);
   }
@@ -113,37 +113,40 @@ async function resolveInstanceAsFailed(
     return participant.id;
   });
 
-
   await setParticipantsStatus(ids, 'FAILED');
 }
 
 async function resolveInstanceAsCompleted(
   instance: ProtectedChallengeInstanceDetails,
-  winnerId: number,
+  winnerIds: number[],
 ): Promise<void> {
   const losingParticipantIds: number[] = [];
-  let winnerParticipantId: number | null = null;
+  const winnerParticipantIds: number[] = [];
   for (const participant of instance.participants) {
     if (participant.status !== 'OPEN') {
       throw new AppError('Challenge already resolved', 400);
     }
-    if (participant.playerId === winnerId) {
-      winnerParticipantId = participant.id;
+    if (winnerIds.includes(participant.playerId)) {
+      winnerParticipantIds.push(participant.id);
     } else {
       losingParticipantIds.push(participant.id);
     }
   }
 
-  if (!winnerParticipantId) {
+  if (winnerParticipantIds.length !== winnerIds.length) {
     throw new AppError('Selected winner is not in challenge', 400);
   }
 
   await setParticipantsStatus(losingParticipantIds, 'FAILED');
-  await setParticipantsStatus([winnerParticipantId], 'COMPLETED');
-  await incrementPlayerAttributeScore(
-    winnerId,
-    instance.eventId,
-    instance.challenge.attributeId,
-    instance.challenge.score,
+  await setParticipantsStatus(winnerParticipantIds, 'COMPLETED');
+  await Promise.all(
+    winnerIds.map((id) => {
+      incrementPlayerAttributeScore(
+        id,
+        instance.eventId,
+        instance.challenge.attributeId,
+        instance.challenge.score,
+      );
+    }),
   );
 }

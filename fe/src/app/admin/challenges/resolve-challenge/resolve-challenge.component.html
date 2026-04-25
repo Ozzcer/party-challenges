@@ -9,29 +9,47 @@
         </button>
       }
       <div class="participant-container">
+        @let winnerForm = winnersForm();
+        @let adversarial = challengeInstance.challenge.type === 'ADVERSARIAL';
         <h3>Players:</h3>
-        @for (participant of challengeInstance.participants; track participant.id) {
-          <div class="participant">
-            <a routerLink="/admin/players/{{ participant.playerId }}">{{
-              participant.player.name
-            }}</a>
-            @switch (participant.status) {
-              @case ('OPEN') {
-                <button
-                  (click)="setWinner(participant.player, challengeInstance.id)"
-                  matButton="filled"
-                >
-                  Set Winner
-                </button>
-              }
-              @case ('COMPLETED') {
-                <p>Winner!</p>
-              }
-              @case ('FAILED') {
-                <p>Failed...</p>
-              }
+        @if (winnerForm) {
+          <form class="winners-form" (ngSubmit)="setAdversarialWinners(challengeInstance, winnerForm)" [formGroup]="winnerForm">
+            @for (participant of challengeInstance.participants; track participant.id) {
+              <div class="participant">
+                <a routerLink="/admin/players/{{ participant.playerId }}">{{
+                  participant.player.name
+                }}</a>
+                @switch (participant.status) {
+                  @case ('OPEN') {
+                    @if (adversarial) {
+                      <mat-checkbox formControlName="{{ participant.playerId }}"
+                        >Select as Winner</mat-checkbox
+                      >
+                    } @else {
+                      <button
+                        (click)="setWinner(participant.player, challengeInstance.id)"
+                        matButton="filled"
+                        type="button"
+                      >
+                        Set Winner
+                      </button>
+                    }
+                  }
+                  @case ('COMPLETED') {
+                    <p>Winner!</p>
+                  }
+                  @case ('FAILED') {
+                    <p>Failed...</p>
+                  }
+                }
+              </div>
             }
-          </div>
+
+            @if (adversarial) {
+              <!-- disable -->
+              <button matButton="filled">Set Winners</button>
+            }
+          </form>
         }
       </div>
     </ng-container>

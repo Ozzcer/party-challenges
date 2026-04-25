@@ -4,7 +4,7 @@ export const resolveChallengeBodySchema = {
       type: 'object',
       properties: {
         status: { type: 'string', const: 'COMPLETED' },
-        winningPlayer: { type: 'number' },
+        winningPlayers: { type: 'array' },
       },
       required: ['status'],
     },

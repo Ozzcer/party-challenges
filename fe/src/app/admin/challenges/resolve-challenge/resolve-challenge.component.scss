@@ -5,12 +5,19 @@
   gap: 0.5rem;
   margin-top: 0.5rem;
 
-  .participant {
+  .winners-form {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 0.5rem;
-    @include outline;
-    padding: 0.5rem;
-    align-items: center;
+
+    .participant {
+      display: flex;
+      flex-direction: row;
+      gap: 0.5rem;
+      @include outline;
+      padding: 0.5rem;
+      align-items: center;
+      justify-content: space-between;
+    }
   }
 }

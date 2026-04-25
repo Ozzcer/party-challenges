@@ -7,9 +7,11 @@ export interface CreateChallenge {
   attributeId: number;
 }
 
-export type ResolveChallenge = {
-  status: Extract<ChallengeStatus, 'COMPLETED'>
-  winningPlayer: number;
-} | {
-  status: Extract<ChallengeStatus, 'FAILED'>
-}
+export type ResolveChallenge =
+  | {
+      status: Extract<ChallengeStatus, 'COMPLETED'>;
+      winningPlayers: number[];
+    }
+  | {
+      status: Extract<ChallengeStatus, 'FAILED'>;
+    };
